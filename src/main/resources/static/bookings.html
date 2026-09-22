@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sương Mai Hotel | Quản Lý Đặt Phòng</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom CSS (Light PMS Theme) -->
+    <link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand-logo">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-hotel"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Sương Mai</h2>
+                    <span>Hotel PMS</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <div class="nav-section-title">QUẢN LÝ</div>
+                
+                <a href="index.html" class="nav-item">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="rooms.html" class="nav-item">
+                    <i class="fa-solid fa-door-open"></i>
+                    <span>Sơ Đồ Phòng</span>
+                </a>
+                
+                <a href="bookings.html" class="nav-item active">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Đặt Phòng</span>
+                </a>
+                
+                <a href="invoices.html" class="nav-item">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span>Hóa Đơn</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="db-badge">
+                    <span class="status-dot online"></span>
+                    <div class="db-info">
+                        <strong>Astra Cassandra</strong>
+                        <span>Connected</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top Header Bar with Custom Interactive Dropdown -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="page-title">Quản Lý Đặt Phòng</h1>
+                </div>
+                
+                <div class="header-right">
+                    <!-- Custom Floating Dropdown for Hotel Branch Selector -->
+                    <div class="custom-dropdown-container" id="hotelDropdownContainer">
+                        <button type="button" class="dropdown-trigger-btn" id="hotelDropdownBtn">
+                            <i class="fa-solid fa-location-dot text-indigo"></i>
+                            <span id="selectedHotelLabel">Tất Cả Chi Nhánh</span>
+                            <i class="fa-solid fa-chevron-down chevron-icon"></i>
+                        </button>
+                        
+                        <div class="custom-dropdown-menu" id="hotelDropdownMenu">
+                            <div class="dropdown-menu-header">Chọn Chi Nhánh Khách Sạn</div>
+                            <div class="dropdown-list" id="hotelDropdownList">
+                                <div class="dropdown-item active" data-value="">
+                                    <i class="fa-solid fa-globe"></i>
+                                    <span>Tất Cả Chi Nhánh</span>
+                                    <i class="fa-solid fa-check check-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden native select for fallback -->
+                    <select id="hotelSelector" style="display: none;">
+                        <option value="">Tất Cả Chi Nhánh</option>
+                    </select>
+
+                    <!-- Quick Refresh Button -->
+                    <button id="btnRefresh" class="btn-icon" title="Làm mới dữ liệu">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- BOOKINGS CONTENT (Dành cho Dev 2) -->
+            <section class="tab-pane active" style="display: block;">
+                <div class="panel-card empty-feature-card">
+                    <i class="fa-solid fa-calendar-check text-muted" style="font-size: 44px; margin-bottom: 14px; color: var(--indigo);"></i>
+                    <h3 style="font-size: 17px; color: var(--text-primary); margin-bottom: 6px;">Trang Đặt Phòng</h3>
+                    <p class="text-muted" style="font-size: 13.5px;">Phần này dành riêng cho <strong>Thành viên 2</strong> phát triển logic & giao diện.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/common.js"></script>
+    <script src="js/booking.js"></script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sương Mai Hotel | Sơ Đồ Phòng</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom CSS (Light PMS Theme) -->
+    <link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand-logo">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-hotel"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Sương Mai</h2>
+                    <span>Hotel PMS</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <div class="nav-section-title">QUẢN LÝ</div>
+                
+                <a href="index.html" class="nav-item">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="rooms.html" class="nav-item active">
+                    <i class="fa-solid fa-door-open"></i>
+                    <span>Sơ Đồ Phòng</span>
+                </a>
+                
+                <a href="bookings.html" class="nav-item">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Đặt Phòng</span>
+                </a>
+                
+                <a href="invoices.html" class="nav-item">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span>Hóa Đơn</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="db-badge">
+                    <span class="status-dot online"></span>
+                    <div class="db-info">
+                        <strong>Astra Cassandra</strong>
+                        <span>Connected</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top Header Bar with Custom Interactive Dropdown -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="page-title">Sơ Đồ Phòng Khách Sạn</h1>
+                </div>
+                
+                <div class="header-right">
+                    <!-- Custom Floating Dropdown for Hotel Branch Selector -->
+                    <div class="custom-dropdown-container" id="hotelDropdownContainer">
+                        <button type="button" class="dropdown-trigger-btn" id="hotelDropdownBtn">
+                            <i class="fa-solid fa-location-dot text-indigo"></i>
+                            <span id="selectedHotelLabel">Tất Cả Chi Nhánh</span>
+                            <i class="fa-solid fa-chevron-down chevron-icon"></i>
+                        </button>
+                        
+                        <div class="custom-dropdown-menu" id="hotelDropdownMenu">
+                            <div class="dropdown-menu-header">Chọn Chi Nhánh Khách Sạn</div>
+                            <div class="dropdown-list" id="hotelDropdownList">
+                                <div class="dropdown-item active" data-value="">
+                                    <i class="fa-solid fa-globe"></i>
+                                    <span>Tất Cả Chi Nhánh</span>
+                                    <i class="fa-solid fa-check check-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden native select for fallback -->
+                    <select id="hotelSelector" style="display: none;">
+                        <option value="">Tất Cả Chi Nhánh</option>
+                    </select>
+
+                    <!-- Quick Refresh Button -->
+                    <button id="btnRefresh" class="btn-icon" title="Làm mới dữ liệu">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- ROOMS CONTENT -->
+            <section class="tab-pane active" style="display: block;">
+                <!-- PMS Status Counter Chips Bar -->
+                <div class="status-chips-bar">
+                    <div class="status-chip active" data-status="ALL" onclick="setStatusChipFilter('ALL')">
+                        <span class="chip-dot dot-all"></span>
+                        <span class="chip-label">Tất Cả</span>
+                        <span class="chip-count" id="chipCountAll">0</span>
+                    </div>
+                    <div class="status-chip" data-status="AVAILABLE" onclick="setStatusChipFilter('AVAILABLE')">
+                        <span class="chip-dot dot-available"></span>
+                        <span class="chip-label">Trống</span>
+                        <span class="chip-count" id="chipCountAvailable">0</span>
+                    </div>
+                    <div class="status-chip" data-status="OCCUPIED" onclick="setStatusChipFilter('OCCUPIED')">
+                        <span class="chip-dot dot-occupied"></span>
+                        <span class="chip-label">Đang Ở</span>
+                        <span class="chip-count" id="chipCountOccupied">0</span>
+                    </div>
+                    <div class="status-chip" data-status="BOOKED" onclick="setStatusChipFilter('BOOKED')">
+                        <span class="chip-dot dot-booked"></span>
+                        <span class="chip-label">Đã Đặt</span>
+                        <span class="chip-count" id="chipCountBooked">0</span>
+                    </div>
+                    <div class="status-chip" data-status="MAINTENANCE" onclick="setStatusChipFilter('MAINTENANCE')">
+                        <span class="chip-dot dot-maintenance"></span>
+                        <span class="chip-label">Bảo Trì</span>
+                        <span class="chip-count" id="chipCountMaintenance">0</span>
+                    </div>
+                </div>
+
+                <!-- PMS Filter Bar & Actions -->
+                <div class="pms-filter-bar">
+                    <div class="filter-left">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="searchRoomKeyword" placeholder="Tìm số phòng, loại phòng...">
+                        </div>
+
+                        <select id="filterRoomFloor" class="select-control">
+                            <option value="ALL">Tất cả tầng</option>
+                            <option value="1">Tầng 1</option>
+                            <option value="2">Tầng 2</option>
+                            <option value="3">Tầng 3</option>
+                            <option value="4">Tầng 4</option>
+                            <option value="5">Tầng 5</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-right">
+                        <!-- View Switcher -->
+                        <div class="view-toggle">
+                            <button id="btnViewGrid" class="btn-toggle active" onclick="setRoomViewMode('grid')" title="Xem dạng Lưới (PMS Grid)">
+                                <i class="fa-solid fa-grip"></i>
+                            </button>
+                            <button id="btnViewList" class="btn-toggle" onclick="setRoomViewMode('list')" title="Xem dạng Danh sách">
+                                <i class="fa-solid fa-list"></i>
+                            </button>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="openAddRoomModal()">
+                            <i class="fa-solid fa-plus"></i> Thêm Phòng
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PMS Room Grid Container -->
+                <div id="roomGridContainer" class="pms-grid-wrapper"></div>
+
+                <!-- Fallback Table Container -->
+                <div id="roomTableContainer" class="table-card" style="display: none;">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Số Phòng</th>
+                                    <th>Khách Sạn</th>
+                                    <th>Loại Phòng</th>
+                                    <th>Tầng</th>
+                                    <th>Giá / Đêm</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="roomTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL: ADD / EDIT ROOM -->
+    <div id="roomModal" class="modal-backdrop">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 id="roomModalTitle"><i class="fa-solid fa-door-open text-indigo"></i> Thêm / Chỉnh Sửa Phòng</h3>
+                <button class="btn-close" onclick="closeRoomModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="roomForm" onsubmit="event.preventDefault(); saveRoom();">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Khách Sạn:</label>
+                            <select id="modalHotelId" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Số Phòng:</label>
+                            <input type="text" id="modalRoomNumber" class="form-control" placeholder="101, 202..." required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Loại Phòng:</label>
+                            <select id="modalRoomType" class="form-control">
+                                <option value="Standard">Standard</option>
+                                <option value="Superior">Superior</option>
+                                <option value="Deluxe">Deluxe</option>
+                                <option value="Suite">Suite</option>
+                                <option value="President">President</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tầng:</label>
+                            <input type="number" id="modalFloor" class="form-control" min="1" max="50" value="1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Giá Phòng / Đêm (VNĐ):</label>
+                            <input type="number" id="modalPrice" class="form-control" step="50000" placeholder="500000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Trạng Thái:</label>
+                            <select id="modalRoomStatus" class="form-control">
+                                <option value="AVAILABLE">AVAILABLE (Trống)</option>
+                                <option value="OCCUPIED">OCCUPIED (Đang ở)</option>
+                                <option value="BOOKED">BOOKED (Đã đặt)</option>
+                                <option value="MAINTENANCE">MAINTENANCE (Bảo trì)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mô Tả Tiện Nghi:</label>
+                        <textarea id="modalDescription" class="form-control" rows="2" placeholder="Ban công, view biển, wifi..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeRoomModal()">Hủy</button>
+                <button class="btn btn-primary" onclick="saveRoom()"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/common.js?v=2"></script>
+    <script src="js/rooms.js?v=2"></script>
+</body>
+</html>

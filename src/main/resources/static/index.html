@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sương Mai Hotel | Dashboard Tổng Quan</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS (Light PMS Theme) -->
+    <link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand-logo">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-hotel"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Sương Mai</h2>
+                    <span>Hotel PMS</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <div class="nav-section-title">QUẢN LÝ</div>
+                
+                <a href="index.html" class="nav-item active">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="rooms.html" class="nav-item">
+                    <i class="fa-solid fa-door-open"></i>
+                    <span>Sơ Đồ Phòng</span>
+                </a>
+                
+                <a href="bookings.html" class="nav-item">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Đặt Phòng</span>
+                </a>
+                
+                <a href="invoices.html" class="nav-item">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                    <span>Hóa Đơn</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="db-badge">
+                    <span class="status-dot online"></span>
+                    <div class="db-info">
+                        <strong>Astra Cassandra</strong>
+                        <span>Connected</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top Header Bar with Custom Interactive Dropdown -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard Tổng Quan</h1>
+                </div>
+                
+                <div class="header-right">
+                    <!-- Custom Floating Dropdown for Hotel Branch Selector -->
+                    <div class="custom-dropdown-container" id="hotelDropdownContainer">
+                        <button type="button" class="dropdown-trigger-btn" id="hotelDropdownBtn">
+                            <i class="fa-solid fa-location-dot text-indigo"></i>
+                            <span id="selectedHotelLabel">Tất Cả Chi Nhánh</span>
+                            <i class="fa-solid fa-chevron-down chevron-icon"></i>
+                        </button>
+                        
+                        <div class="custom-dropdown-menu" id="hotelDropdownMenu">
+                            <div class="dropdown-menu-header">Chọn Chi Nhánh Khách Sạn</div>
+                            <div class="dropdown-list" id="hotelDropdownList">
+                                <div class="dropdown-item active" data-value="">
+                                    <i class="fa-solid fa-globe"></i>
+                                    <span>Tất Cả Chi Nhánh</span>
+                                    <i class="fa-solid fa-check check-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden native select for fallback -->
+                    <select id="hotelSelector" style="display: none;">
+                        <option value="">Tất Cả Chi Nhánh</option>
+                    </select>
+
+                    <!-- Quick Refresh Button -->
+                    <button id="btnRefresh" class="btn-icon" title="Làm mới dữ liệu">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- DASHBOARD CONTENT -->
+            <section class="tab-pane active" style="display: block;">
+                <!-- KPI Cards Row -->
+                <div class="kpi-grid">
+                    <div class="kpi-card kpi-purple">
+                        <div class="kpi-icon"><i class="fa-solid fa-bed"></i></div>
+                        <div class="kpi-content">
+                            <span class="kpi-label">Tổng Phòng</span>
+                            <h3 class="kpi-value" id="kpiTotalRooms">--</h3>
+                            <span class="kpi-hint"><span id="kpiTotalHotels">--</span> khách sạn</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card kpi-rose">
+                        <div class="kpi-icon"><i class="fa-solid fa-user-check"></i></div>
+                        <div class="kpi-content">
+                            <span class="kpi-label">Đang Có Khách</span>
+                            <h3 class="kpi-value" id="kpiOccupiedRooms">--</h3>
+                            <span class="kpi-hint">Lấp đầy: <strong id="kpiOccupancyRate">0%</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card kpi-green">
+                        <div class="kpi-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                        <div class="kpi-content">
+                            <span class="kpi-label">Tổng Doanh Thu</span>
+                            <h3 class="kpi-value" id="kpiTotalRevenue">0 ₫</h3>
+                            <span class="kpi-hint">Từ hóa đơn</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card kpi-emerald">
+                        <div class="kpi-icon"><i class="fa-solid fa-door-open"></i></div>
+                        <div class="kpi-content">
+                            <span class="kpi-label">Phòng Trống</span>
+                            <h3 class="kpi-value" id="kpiAvailableRooms">--</h3>
+                            <span class="kpi-hint">Đặt: <span id="kpiBookedRooms">0</span> · Bảo trì: <span id="kpiMaintenanceRooms">0</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-chart-column text-indigo"></i> Doanh Thu Chi Nhánh</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-chart-pie text-indigo"></i> Trạng Thái Phòng</h3>
+                        </div>
+                        <div class="chart-container chart-doughnut">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/common.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
