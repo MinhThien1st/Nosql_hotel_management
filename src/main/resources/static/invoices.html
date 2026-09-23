@@ -3,128 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sương Mai Hotel | Quản Lý Hóa Đơn</title>
-    
-    <!-- Google Fonts -->
+    <title>Sương Mai Hotel | Hóa Đơn & Thu Ngân</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Custom CSS (Light PMS Theme) -->
-    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="css/style.css?v=5">
+    <style>
+        .invoice-page { display:flex; flex-direction:column; gap:16px; }
+        .invoice-toolbar { display:grid; grid-template-columns:minmax(240px,1fr) 190px auto; gap:10px; }
+        .invoice-search,.invoice-filter { width:100%; height:40px; border:1px solid var(--border-color); border-radius:10px; background:#fff; padding:0 12px; color:var(--text-primary); outline:none; }
+        .invoice-search:focus,.invoice-filter:focus { border-color:var(--indigo); box-shadow:0 0 0 3px rgba(79,70,229,.1); }
+        .invoice-table-wrap { overflow:auto; border:1px solid var(--border-color); border-radius:12px; }
+        .invoice-table { width:100%; border-collapse:collapse; min-width:980px; }
+        .invoice-table th { background:var(--bg-subtle); color:var(--text-muted); text-transform:uppercase; letter-spacing:.4px; font-size:11px; font-weight:700; padding:11px 12px; text-align:left; border-bottom:1px solid var(--border-color); white-space:nowrap; }
+        .invoice-table td { padding:12px; border-bottom:1px solid var(--border-color); font-size:12.5px; vertical-align:middle; }
+        .invoice-table tbody tr:hover { background:#fafbff; }
+        .invoice-table tbody tr:last-child td { border-bottom:0; }
+        .invoice-id { font-weight:700; color:var(--indigo); }
+        .booking-id { font-weight:700; color:var(--text-primary); }
+        .guest-name { font-weight:600; }
+        .money { font-weight:700; white-space:nowrap; }
+        .status-pill { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:5px 9px; font-size:10.5px; font-weight:700; white-space:nowrap; }
+        .status-pill.paid { background:var(--emerald-light); color:#047857; border:1px solid var(--emerald-border); }
+        .status-pill.unpaid { background:var(--amber-light); color:#b45309; border:1px solid var(--amber-border); }
+        .invoice-actions { display:flex; gap:6px; }
+        .invoice-btn { border:1px solid var(--border-color); background:#fff; color:var(--text-secondary); border-radius:8px; height:32px; padding:0 9px; cursor:pointer; font-size:11px; font-weight:600; }
+        .invoice-btn:hover { background:var(--bg-hover); color:var(--indigo); border-color:var(--indigo-border); }
+        .invoice-btn.pay { color:#047857; }
+        .invoice-btn.pay:hover { background:var(--emerald-light); border-color:var(--emerald-border); }
+        .invoice-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+        .invoice-kpi { padding:14px 16px; border:1px solid var(--border-color); border-radius:12px; background:#fff; }
+        .invoice-kpi span { display:block; color:var(--text-muted); font-size:11px; margin-bottom:5px; }
+        .invoice-kpi strong { display:block; font-size:19px; }
+        .empty-invoices { text-align:center; padding:48px 20px; color:var(--text-muted); }
+        .empty-invoices i { font-size:34px; margin-bottom:10px; }
+        .invoice-modal { position:fixed; inset:0; z-index:2000; background:rgba(15,23,42,.42); display:none; align-items:center; justify-content:center; padding:20px; }
+        .invoice-modal.open { display:flex; }
+        .invoice-modal-card { width:min(720px,100%); max-height:90vh; overflow:auto; background:#fff; border-radius:16px; box-shadow:0 20px 60px rgba(15,23,42,.2); }
+        .invoice-modal-head { display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--border-color); }
+        .invoice-modal-head h3 { font-size:16px; }
+        .invoice-close { border:0; background:var(--bg-hover); width:34px; height:34px; border-radius:9px; cursor:pointer; color:var(--text-secondary); }
+        .invoice-modal-body { padding:20px; }
+        .invoice-detail-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px 18px; }
+        .invoice-detail-item { padding:10px 0; border-bottom:1px dashed var(--border-color); }
+        .invoice-detail-item span { display:block; color:var(--text-muted); font-size:10.5px; margin-bottom:3px; }
+        .invoice-detail-item strong { font-size:13px; }
+        .invoice-total { margin-top:15px; padding:14px 16px; border-radius:11px; background:var(--indigo-light); display:flex; justify-content:space-between; align-items:center; }
+        .invoice-total strong { color:var(--indigo); font-size:18px; }
+        .pay-form { display:grid; grid-template-columns:1fr auto; gap:10px; margin-top:16px; }
+        .pay-select { height:40px; border:1px solid var(--border-color); border-radius:9px; padding:0 10px; background:#fff; }
+        .btn-primary { height:40px; border:0; border-radius:9px; background:var(--indigo); color:#fff; padding:0 16px; cursor:pointer; font-weight:700; }
+        .btn-primary:hover { filter:brightness(.96); }
+        .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+        .invoice-loading { padding:30px; text-align:center; color:var(--text-muted); }
+        @media (max-width: 900px) { .invoice-summary { grid-template-columns:repeat(2,1fr); } .invoice-toolbar { grid-template-columns:1fr; } }
+        @media (max-width: 600px) { .invoice-summary { grid-template-columns:1fr 1fr; } .invoice-detail-grid { grid-template-columns:1fr; } .main-content { padding:16px; } }
+    </style>
 </head>
 <body>
-    <div class="app-layout">
-        
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="brand-logo">
-                <div class="brand-icon">
-                    <i class="fa-solid fa-hotel"></i>
-                </div>
-                <div class="brand-text">
-                    <h2>Sương Mai</h2>
-                    <span>Hotel PMS</span>
-                </div>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="brand-logo">
+            <div class="brand-icon"><i class="fa-solid fa-hotel"></i></div>
+            <div class="brand-text"><h2>Sương Mai</h2><span>Hotel PMS</span></div>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-section-title">QUẢN LÝ</div>
+            <a href="index.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="rooms.html" class="nav-item"><i class="fa-solid fa-door-open"></i><span>Sơ Đồ Phòng</span></a>
+            <a href="bookings.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i><span>Đặt Phòng</span></a>
+            <a href="invoices.html" class="nav-item active"><i class="fa-solid fa-file-invoice-dollar"></i><span>Hóa Đơn</span></a>
+        </nav>
+        <div class="sidebar-footer"><div class="db-badge"><span class="status-dot online"></span><div class="db-info"><strong>Astra Cassandra</strong><span>Connected / Fallback</span></div></div></div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-left">
+                <h1>Hóa Đơn & Thu Ngân</h1>
+                <div style="color:var(--text-muted);font-size:12px;margin-top:3px;">Q5 · invoices_by_booking</div>
             </div>
-
-            <nav class="nav-menu">
-                <div class="nav-section-title">QUẢN LÝ</div>
-                
-                <a href="index.html" class="nav-item">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Dashboard</span>
-                </a>
-                
-                <a href="rooms.html" class="nav-item">
-                    <i class="fa-solid fa-door-open"></i>
-                    <span>Sơ Đồ Phòng</span>
-                </a>
-                
-                <a href="bookings.html" class="nav-item">
-                    <i class="fa-solid fa-calendar-check"></i>
-                    <span>Đặt Phòng</span>
-                </a>
-                
-                <a href="invoices.html" class="nav-item active">
-                    <i class="fa-solid fa-file-invoice-dollar"></i>
-                    <span>Hóa Đơn</span>
-                </a>
-
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="db-badge">
-                    <span class="status-dot online"></span>
-                    <div class="db-info">
-                        <strong>Astra Cassandra</strong>
-                        <span>Connected</span>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="main-content">
-            
-            <!-- Top Header Bar with Custom Interactive Dropdown -->
-            <header class="top-header">
-                <div class="header-left">
-                    <h1 id="page-title">Quản Lý Hóa Đơn & Thu Ngân</h1>
-                </div>
-                
-                <div class="header-right">
-                    <!-- Custom Floating Dropdown for Hotel Branch Selector -->
-                    <div class="custom-dropdown-container" id="hotelDropdownContainer">
-                        <button type="button" class="dropdown-trigger-btn" id="hotelDropdownBtn">
-                            <i class="fa-solid fa-location-dot text-indigo"></i>
-                            <span id="selectedHotelLabel">Tất Cả Chi Nhánh</span>
-                            <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                        </button>
-                        
-                        <div class="custom-dropdown-menu" id="hotelDropdownMenu">
-                            <div class="dropdown-menu-header">Chọn Chi Nhánh Khách Sạn</div>
-                            <div class="dropdown-list" id="hotelDropdownList">
-                                <div class="dropdown-item active" data-value="">
-                                    <i class="fa-solid fa-globe"></i>
-                                    <span>Tất Cả Chi Nhánh</span>
-                                    <i class="fa-solid fa-check check-icon"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Hidden native select for fallback -->
-                    <select id="hotelSelector" style="display: none;">
-                        <option value="">Tất Cả Chi Nhánh</option>
-                    </select>
-
-                    <!-- Quick Refresh Button -->
-                    <button id="btnRefresh" class="btn-icon" title="Làm mới dữ liệu">
-                        <i class="fa-solid fa-arrows-rotate"></i>
+            <div class="header-right">
+                <div class="custom-dropdown-container" id="hotelDropdownContainer">
+                    <button type="button" class="dropdown-trigger-btn" id="hotelDropdownBtn">
+                        <i class="fa-solid fa-location-dot text-indigo"></i><span id="selectedHotelLabel">Tất Cả Chi Nhánh</span><i class="fa-solid fa-chevron-down chevron-icon"></i>
                     </button>
+                    <div class="custom-dropdown-menu" id="hotelDropdownMenu">
+                        <div class="dropdown-menu-header">Chọn Chi Nhánh Khách Sạn</div>
+                        <div class="dropdown-list" id="hotelDropdownList"><div class="dropdown-item active"><i class="fa-solid fa-spinner fa-spin"></i><span>Đang tải...</span></div></div>
+                    </div>
                 </div>
-            </header>
+                <button id="btnRefresh" class="btn-icon" title="Làm mới"><i class="fa-solid fa-arrows-rotate"></i></button>
+            </div>
+        </header>
 
-            <!-- INVOICES CONTENT (Dành cho Dev 3) -->
-            <section class="tab-pane active" style="display: block;">
-                <div class="panel-card empty-feature-card">
-                    <i class="fa-solid fa-file-invoice-dollar text-muted" style="font-size: 44px; margin-bottom: 14px; color: var(--emerald);"></i>
-                    <h3 style="font-size: 17px; color: var(--text-primary); margin-bottom: 6px;">Trang Hóa Đơn</h3>
-                    <p class="text-muted" style="font-size: 13.5px;">Phần này dành riêng cho <strong>Thành viên 3</strong> phát triển logic & giao diện.</p>
+        <section class="invoice-page">
+            <div class="invoice-summary">
+                <div class="invoice-kpi"><span>Tổng hóa đơn</span><strong id="sumCount">0</strong></div>
+                <div class="invoice-kpi"><span>Đã thanh toán</span><strong id="sumPaid">0 ₫</strong></div>
+                <div class="invoice-kpi"><span>Chưa thanh toán</span><strong id="sumUnpaid">0 ₫</strong></div>
+                <div class="invoice-kpi"><span>Tiền giảm giá</span><strong id="sumDiscount">0 ₫</strong></div>
+            </div>
+
+            <div class="panel-card">
+                <div class="invoice-toolbar">
+                    <input id="invoiceSearch" class="invoice-search" type="search" placeholder="Tìm booking, mã hóa đơn, tên khách...">
+                    <select id="paymentFilter" class="invoice-filter">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="PAID">Đã thanh toán</option>
+                        <option value="UNPAID">Chưa thanh toán</option>
+                    </select>
+                    <button id="btnClearFilters" class="btn btn-outline btn-sm"><i class="fa-solid fa-filter-circle-xmark"></i> Xóa lọc</button>
                 </div>
-            </section>
-        </main>
+            </div>
+
+            <div class="panel-card" style="padding:0;">
+                <div class="invoice-table-wrap">
+                    <table class="invoice-table">
+                        <thead><tr>
+                            <th>Hóa đơn</th><th>Booking</th><th>Khách hàng</th><th>Chi nhánh</th><th>Ngày xuất</th><th>Thành tiền</th><th>Thanh toán</th><th>Thao tác</th>
+                        </tr></thead>
+                        <tbody id="invoiceTableBody"><tr><td colspan="8"><div class="invoice-loading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải hóa đơn...</div></td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<div id="invoiceModal" class="invoice-modal" aria-hidden="true">
+    <div class="invoice-modal-card">
+        <div class="invoice-modal-head"><h3 id="modalTitle">Chi tiết hóa đơn</h3><button class="invoice-close" onclick="closeInvoiceModal()"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="invoice-modal-body" id="invoiceModalBody"></div>
     </div>
+</div>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="toast-container"></div>
-
-    <!-- Scripts -->
-    <script src="js/common.js"></script>
-    <script src="js/invoice.js"></script>
+<script src="js/common.js"></script>
+<script src="js/invoice.js"></script>
 </body>
 </html>
