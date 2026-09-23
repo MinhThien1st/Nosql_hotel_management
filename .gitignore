@@ -32,3 +32,7 @@ astra-creds/*.zip
 
 # Log files
 *.log
+
+# Astra DB credentials
+astra-creds/
+secure-connect-*.zip

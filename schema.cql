@@ -83,3 +83,21 @@ CREATE TABLE IF NOT EXISTS invoices_by_booking (
     issued_date date,
     PRIMARY KEY ((booking_id))
 );
+
+CREATE TABLE IF NOT EXISTS bookings_by_id (
+    booking_id text,
+    guest_id text,
+    guest_name text,
+    hotel_id text,
+    hotel_name text,
+    room_number text,
+    room_type text,
+    check_in_date date,
+    check_out_date date,
+    number_of_nights int,
+    number_of_guests int,
+    status text,
+    special_request text,
+    total_amount_vnd int,
+    PRIMARY KEY (booking_id)
+);
