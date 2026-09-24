@@ -4,127 +4,786 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sương Mai Hotel | Quản Lý Đặt Phòng</title>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Custom CSS (Light PMS Theme) -->
+
+    <!-- CSS chung -->
     <link rel="stylesheet" href="css/style.css?v=4">
+
+    <!-- CSS riêng trang Booking -->
+    <style>
+        .booking-page {
+            padding-bottom: 32px;
+        }
+
+        .booking-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .booking-toolbar-left,
+        .booking-toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .booking-control {
+            height: 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0 12px;
+            background: #fff;
+            color: #1e293b;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .booking-control:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .10);
+        }
+
+        .booking-search {
+            min-width: 240px;
+        }
+
+        .booking-date-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .booking-date-wrap i {
+            position: absolute;
+            left: 12px;
+            color: #64748b;
+            pointer-events: none;
+        }
+
+        .booking-date-wrap input {
+            padding-left: 36px;
+        }
+
+        .booking-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .booking-summary-card {
+            background: #fff;
+            border: 1px solid #e8edf5;
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, .04);
+        }
+
+        .booking-summary-card .label {
+            color: #64748b;
+            font-size: 12.5px;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+        .booking-summary-card .value {
+            color: #0f172a;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .booking-summary-card .sub {
+            color: #94a3b8;
+            font-size: 11.5px;
+            margin-top: 4px;
+        }
+
+        .booking-table-card {
+            background: #fff;
+            border: 1px solid #e8edf5;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, .04);
+        }
+
+        .booking-table-header {
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .booking-table-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .booking-table-subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 3px;
+        }
+
+        .booking-table-scroll {
+            overflow-x: auto;
+        }
+
+        .booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 980px;
+        }
+
+        .booking-table th {
+            text-align: left;
+            padding: 12px 14px;
+            font-size: 11.5px;
+            color: #64748b;
+            font-weight: 700;
+            background: #f8fafc;
+            border-bottom: 1px solid #eef2f7;
+            white-space: nowrap;
+        }
+
+        .booking-table td {
+            padding: 14px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+            font-size: 12.5px;
+            vertical-align: middle;
+        }
+
+        .booking-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .booking-id {
+            font-weight: 800;
+            color: #4f46e5;
+            font-size: 12px;
+        }
+
+        .guest-name {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .muted-line {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .booking-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .status-confirmed {
+            color: #a16207;
+            background: #fef9c3;
+        }
+
+        .status-checked_in {
+            color: #1d4ed8;
+            background: #dbeafe;
+        }
+
+        .status-completed {
+            color: #047857;
+            background: #d1fae5;
+        }
+
+        .status-cancelled {
+            color: #be123c;
+            background: #ffe4e6;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .booking-action-btn {
+            border: 0;
+            border-radius: 8px;
+            padding: 7px 9px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .18s ease;
+        }
+
+        .booking-action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-checkin {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .btn-checkout {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .btn-cancel-booking {
+            background: #fff1f2;
+            color: #be123c;
+        }
+
+        .booking-empty {
+            text-align: center;
+            padding: 48px 20px !important;
+            color: #94a3b8 !important;
+        }
+
+        .booking-empty i {
+            display: block;
+            font-size: 34px;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .booking-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .45);
+            backdrop-filter: blur(2px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 9999;
+        }
+
+        .booking-modal.show {
+            display: flex;
+        }
+
+        .booking-modal-card {
+            width: min(720px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 22px 60px rgba(15, 23, 42, .22);
+        }
+
+        .booking-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .booking-modal-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .booking-modal-close {
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 9px;
+            background: #f8fafc;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .booking-modal-body {
+            padding: 20px;
+        }
+
+        .booking-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .booking-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .booking-form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .booking-form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .booking-form-group input,
+        .booking-form-group select,
+        .booking-form-group textarea {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            color: #0f172a;
+            box-sizing: border-box;
+        }
+
+        .booking-form-group input:focus,
+        .booking-form-group select:focus,
+        .booking-form-group textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .10);
+        }
+
+        .room-preview {
+            margin-top: 4px;
+            padding: 12px;
+            border: 1px dashed #cbd5e1;
+            background: #f8fafc;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #64748b;
+            display: none;
+        }
+
+        .room-preview.show {
+            display: block;
+        }
+
+        .room-preview strong {
+            color: #0f172a;
+        }
+
+        .booking-modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eef2f7;
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+        }
+
+        .booking-btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 750;
+            cursor: pointer;
+        }
+
+        .booking-btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .booking-btn-primary {
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .booking-btn-primary:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .booking-primary-action {
+            border: none;
+            border-radius: 10px;
+            height: 40px;
+            padding: 0 14px;
+            background: #4f46e5;
+            color: #fff;
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 750;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        @media (max-width: 1100px) {
+            .booking-summary-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .booking-summary-grid,
+            .booking-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-form-group.full {
+                grid-column: auto;
+            }
+
+            .booking-search {
+                min-width: 180px;
+                width: 100%;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="app-layout">
-        
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="brand-logo">
-                <div class="brand-icon">
-                    <i class="fa-solid fa-hotel"></i>
-                </div>
-                <div class="brand-text">
-                    <h2>Sương Mai</h2>
-                    <span>Hotel PMS</span>
+<div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand-logo">
+            <div class="brand-icon">
+                <i class="fa-solid fa-hotel"></i>
+            </div>
+            <div class="brand-text">
+                <h2>Sương Mai</h2>
+                <span>Hotel PMS</span>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section-title">QUẢN LÝ</div>
+
+            <a href="index.html" class="nav-item">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="rooms.html" class="nav-item">
+                <i class="fa-solid fa-door-open"></i>
+                <span>Sơ Đồ Phòng</span>
+            </a>
+
+            <a href="bookings.html" class="nav-item active">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Đặt Phòng</span>
+            </a>
+
+            <a href="invoices.html" class="nav-item">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <span>Hóa Đơn</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="db-badge">
+                <span class="status-dot online"></span>
+                <div class="db-info">
+                    <strong>Astra Cassandra</strong>
+                    <span>Connected</span>
                 </div>
             </div>
+        </div>
+    </aside>
 
-            <nav class="nav-menu">
-                <div class="nav-section-title">QUẢN LÝ</div>
-                
-                <a href="index.html" class="nav-item">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Dashboard</span>
-                </a>
-                
-                <a href="rooms.html" class="nav-item">
-                    <i class="fa-solid fa-door-open"></i>
-                    <span>Sơ Đồ Phòng</span>
-                </a>
-                
-                <a href="bookings.html" class="nav-item active">
-                    <i class="fa-solid fa-calendar-check"></i>
-                    <span>Đặt Phòng</span>
-                </a>
-                
-                <a href="invoices.html" class="nav-item">
-                    <i class="fa-solid fa-file-invoice-dollar"></i>
-                    <span>Hóa Đơn</span>
-                </a>
+    <!-- Main -->
+    <main class="main-content booking-page">
 
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="db-badge">
-                    <span class="status-dot online"></span>
-                    <div class="db-info">
-                        <strong>Astra Cassandra</strong>
-                        <span>Connected</span>
-                    </div>
-                </div>
+        <!-- Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <h1 id="page-title">Quản Lý Đặt Phòng</h1>
             </div>
-        </aside>
 
-        <!-- Main Content Area -->
-        <main class="main-content">
-            
-            <!-- Top Header Bar with Custom Interactive Dropdown -->
-            <header class="top-header">
-                <div class="header-left">
-                    <h1 id="page-title">Quản Lý Đặt Phòng</h1>
+            <div class="header-right">
+                <div class="custom-dropdown-container" id="hotelDropdownContainer">
+                    <button type="button" class="dropdown-trigger-btn" id="hotelDropdownBtn">
+                        <i class="fa-solid fa-location-dot text-indigo"></i>
+                        <span id="selectedHotelLabel">Chọn Chi Nhánh</span>
+                        <i class="fa-solid fa-chevron-down chevron-icon"></i>
+                    </button>
+
+                    <div class="custom-dropdown-menu" id="hotelDropdownMenu">
+                        <div class="dropdown-menu-header">Chọn Chi Nhánh Khách Sạn</div>
+                        <div class="dropdown-list" id="hotelDropdownList"></div>
+                    </div>
                 </div>
-                
-                <div class="header-right">
-                    <!-- Custom Floating Dropdown for Hotel Branch Selector -->
-                    <div class="custom-dropdown-container" id="hotelDropdownContainer">
-                        <button type="button" class="dropdown-trigger-btn" id="hotelDropdownBtn">
-                            <i class="fa-solid fa-location-dot text-indigo"></i>
-                            <span id="selectedHotelLabel">Tất Cả Chi Nhánh</span>
-                            <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                        </button>
-                        
-                        <div class="custom-dropdown-menu" id="hotelDropdownMenu">
-                            <div class="dropdown-menu-header">Chọn Chi Nhánh Khách Sạn</div>
-                            <div class="dropdown-list" id="hotelDropdownList">
-                                <div class="dropdown-item active" data-value="">
-                                    <i class="fa-solid fa-globe"></i>
-                                    <span>Tất Cả Chi Nhánh</span>
-                                    <i class="fa-solid fa-check check-icon"></i>
-                                </div>
-                            </div>
-                        </div>
+
+                <select id="hotelSelector" style="display:none;"></select>
+
+                <button id="btnRefresh" class="btn-icon" title="Làm mới dữ liệu">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+            </div>
+        </header>
+
+        <section class="tab-pane active" style="display:block;">
+
+            <!-- Toolbar -->
+            <div class="booking-toolbar">
+                <div class="booking-toolbar-left">
+                    <div class="booking-date-wrap">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        <input
+                            type="date"
+                            id="bookingDateFilter"
+                            class="booking-control"
+                        >
                     </div>
 
-                    <!-- Hidden native select for fallback -->
-                    <select id="hotelSelector" style="display: none;">
-                        <option value="">Tất Cả Chi Nhánh</option>
+                    <select id="bookingStatusFilter" class="booking-control">
+                        <option value="ALL">Tất cả trạng thái</option>
+                        <option value="CONFIRMED">Đã đặt</option>
+                        <option value="CHECKED_IN">Đã nhận phòng</option>
+                        <option value="COMPLETED">Hoàn thành</option>
+                        <option value="CANCELLED">Đã hủy</option>
                     </select>
 
-                    <!-- Quick Refresh Button -->
-                    <button id="btnRefresh" class="btn-icon" title="Làm mới dữ liệu">
-                        <i class="fa-solid fa-arrows-rotate"></i>
+                    <input
+                        type="text"
+                        id="bookingKeyword"
+                        class="booking-control booking-search"
+                        placeholder="Tìm mã booking, khách, phòng..."
+                    >
+                </div>
+
+                <div class="booking-toolbar-right">
+                    <button
+                        type="button"
+                        class="booking-primary-action"
+                        id="btnOpenBookingModal"
+                    >
+                        <i class="fa-solid fa-plus"></i>
+                        Tạo Đặt Phòng
                     </button>
                 </div>
-            </header>
+            </div>
 
-            <!-- BOOKINGS CONTENT (Dành cho Dev 2) -->
-            <section class="tab-pane active" style="display: block;">
-                <div class="panel-card empty-feature-card">
-                    <i class="fa-solid fa-calendar-check text-muted" style="font-size: 44px; margin-bottom: 14px; color: var(--indigo);"></i>
-                    <h3 style="font-size: 17px; color: var(--text-primary); margin-bottom: 6px;">Trang Đặt Phòng</h3>
-                    <p class="text-muted" style="font-size: 13.5px;">Phần này dành riêng cho <strong>Thành viên 2</strong> phát triển logic & giao diện.</p>
+            <!-- Summary -->
+            <div class="booking-summary-grid">
+                <div class="booking-summary-card">
+                    <div class="label">Tổng booking</div>
+                    <div class="value" id="summaryTotal">0</div>
+                    <div class="sub">Theo chi nhánh và ngày đang chọn</div>
                 </div>
-            </section>
-        </main>
+
+                <div class="booking-summary-card">
+                    <div class="label">Đã đặt</div>
+                    <div class="value" id="summaryConfirmed">0</div>
+                    <div class="sub">Chờ khách check-in</div>
+                </div>
+
+                <div class="booking-summary-card">
+                    <div class="label">Đang lưu trú</div>
+                    <div class="value" id="summaryCheckedIn">0</div>
+                    <div class="sub">Booking đã check-in</div>
+                </div>
+
+                <div class="booking-summary-card">
+                    <div class="label">Hoàn thành / Hủy</div>
+                    <div class="value" id="summaryClosed">0</div>
+                    <div class="sub">Booking đã kết thúc</div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="booking-table-card">
+                <div class="booking-table-header">
+                    <div>
+                        <div class="booking-table-title">Danh sách đặt phòng</div>
+                        <div class="booking-table-subtitle" id="bookingTableSubtitle">
+                            Chọn chi nhánh để xem booking
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-table-scroll">
+                    <table class="booking-table">
+                        <thead>
+                        <tr>
+                            <th>Mã booking</th>
+                            <th>Khách hàng</th>
+                            <th>Phòng</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Số khách</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody id="bookingTableBody">
+                        <tr>
+                            <td colspan="8" class="booking-empty">
+                                <i class="fa-solid fa-hotel"></i>
+                                Đang tải dữ liệu...
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Modal tạo Booking -->
+<div class="booking-modal" id="bookingModal">
+    <div class="booking-modal-card">
+        <div class="booking-modal-header">
+            <div>
+                <div class="booking-modal-title">
+                    <i class="fa-solid fa-calendar-plus text-indigo"></i>
+                    Tạo Đặt Phòng Mới
+                </div>
+            </div>
+
+            <button
+                type="button"
+                class="booking-modal-close"
+                id="btnCloseBookingModal"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="booking-modal-body">
+            <form id="bookingForm">
+                <div class="booking-form-grid">
+
+                    <div class="booking-form-group">
+                        <label>Mã khách hàng *</label>
+                        <input
+                            type="text"
+                            id="modalGuestId"
+                            placeholder="VD: G100"
+                            required
+                        >
+                    </div>
+
+                    <div class="booking-form-group">
+                        <label>Tên khách hàng *</label>
+                        <input
+                            type="text"
+                            id="modalGuestName"
+                            placeholder="Nguyễn Văn A"
+                            required
+                        >
+                    </div>
+
+                    <div class="booking-form-group full">
+                        <label>Chi nhánh *</label>
+                        <select id="modalHotelId" required></select>
+                    </div>
+
+                    <div class="booking-form-group full">
+                        <label>Phòng trống *</label>
+                        <select id="modalRoomNumber" required>
+                            <option value="">-- Chọn phòng --</option>
+                        </select>
+
+                        <div class="room-preview" id="roomPreview"></div>
+                    </div>
+
+                    <div class="booking-form-group">
+                        <label>Ngày check-in *</label>
+                        <input
+                            type="date"
+                            id="modalCheckIn"
+                            required
+                        >
+                    </div>
+
+                    <div class="booking-form-group">
+                        <label>Ngày check-out *</label>
+                        <input
+                            type="date"
+                            id="modalCheckOut"
+                            required
+                        >
+                    </div>
+
+                    <div class="booking-form-group">
+                        <label>Số khách *</label>
+                        <input
+                            type="number"
+                            id="modalNumberOfGuests"
+                            min="1"
+                            value="1"
+                            required
+                        >
+                    </div>
+
+                    <div class="booking-form-group">
+                        <label>Số đêm</label>
+                        <input
+                            type="text"
+                            id="modalNumberOfNights"
+                            value="0"
+                            disabled
+                        >
+                    </div>
+
+                    <div class="booking-form-group full">
+                        <label>Yêu cầu đặc biệt</label>
+                        <textarea
+                            id="modalSpecialRequest"
+                            rows="3"
+                            placeholder="Phòng yên tĩnh, tầng cao, không hút thuốc..."
+                        ></textarea>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="booking-modal-footer">
+            <button
+                type="button"
+                class="booking-btn booking-btn-secondary"
+                id="btnCancelBookingModal"
+            >
+                Hủy
+            </button>
+
+            <button
+                type="button"
+                class="booking-btn booking-btn-primary"
+                id="btnSaveBooking"
+            >
+                <i class="fa-solid fa-floppy-disk"></i>
+                Tạo Booking
+            </button>
+        </div>
     </div>
+</div>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="toast-container"></div>
+<!-- Toast -->
+<div id="toastContainer" class="toast-container"></div>
 
-    <!-- Scripts -->
-    <script src="js/common.js"></script>
-    <script src="js/booking.js"></script>
+<script src="js/common.js?v=3"></script>
+<script src="js/booking.js?v=3"></script>
 </body>
 </html>
