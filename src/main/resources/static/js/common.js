@@ -121,6 +121,9 @@ async function loadHotels(afterLoadedCallback) {
             });
         }
 
+        // Render Hotel Information Banner (Address, Hotline, Star Rating, Pool, Spa)
+        renderHotelBanner();
+
         if (typeof afterLoadedCallback === 'function') {
             afterLoadedCallback();
         }
@@ -149,8 +152,90 @@ function selectHotel(hotelId) {
     if (menu) menu.classList.remove('show');
     if (btn) btn.classList.remove('open');
 
+    // Cập nhật thông tin chi nhánh (Hotline, Địa chỉ, Tiện ích Bể bơi/Spa, Số sao)
+    renderHotelBanner();
+
     // Trigger callback nếu có
     if (typeof appState.onHotelChange === 'function') {
         appState.onHotelChange(hotelId);
     }
+}
+
+/**
+ * Render Khung Thông Tin Chi Nhánh Khách Sạn (Bảng 'hotels' - Q1)
+ * Hiển thị đầy đủ các trường: Tên, Slogan, Địa chỉ, Hotline, Sao, Bể bơi, Spa
+ */
+function renderHotelBanner() {
+    let bannerElem = document.getElementById('hotelInfoBanner');
+    if (!bannerElem) {
+        const topHeader = document.querySelector('.top-header');
+        if (topHeader && topHeader.parentNode) {
+            bannerElem = document.createElement('div');
+            bannerElem.id = 'hotelInfoBanner';
+            bannerElem.className = 'hotel-info-banner';
+            topHeader.parentNode.insertBefore(bannerElem, topHeader.nextSibling);
+        } else {
+            return;
+        }
+    }
+
+    const currentId = appState.selectedHotelId;
+    const hotel = appState.hotels.find(h => h.hotelId === currentId);
+
+    if (!hotel) {
+        // Chế độ "Tất Cả Chi Nhánh"
+        bannerElem.innerHTML = `
+            <div class="branch-card branch-overview">
+                <div class="branch-main">
+                    <div class="branch-title-row">
+                        <span class="branch-badge-chain"><i class="fa-solid fa-crown text-amber"></i> Hệ Thống Chuỗi Sương Mai</span>
+                        <span class="branch-stars">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </span>
+                    </div>
+                    <h2 class="branch-name"><i class="fa-solid fa-hotel text-indigo"></i> Chuỗi Khách Sạn & Resort Nghỉ Dưỡng Toàn Quốc</h2>
+                    <p class="branch-tagline">“Trải nghiệm dịch vụ lưu trú 4-5 sao tại các thành phố du lịch biển và trung tâm kinh tế hàng đầu Việt Nam”</p>
+                    <div class="branch-meta-row">
+                        <div class="meta-item"><i class="fa-solid fa-building-flag text-indigo"></i> Quy mô: <strong>${appState.hotels.length} chi nhánh</strong></div>
+                        <div class="meta-item"><i class="fa-solid fa-phone text-emerald"></i> Tổng đài CSKH: <strong>1900-8888</strong></div>
+                        <div class="meta-item-amenities">
+                            <span class="amenity-badge pool-badge"><i class="fa-solid fa-water-ladder"></i> Hồ bơi vô cực</span>
+                            <span class="amenity-badge spa-badge"><i class="fa-solid fa-spa"></i> Spa & Massage</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    // Chế độ chi nhánh cụ thể
+    const starCount = hotel.starRating || 5;
+    let starsHtml = '';
+    for (let i = 0; i < starCount; i++) {
+        starsHtml += '<i class="fa-solid fa-star text-amber"></i>';
+    }
+
+    bannerElem.innerHTML = `
+        <div class="branch-card branch-detail">
+            <div class="branch-main">
+                <div class="branch-title-row">
+                    <span class="branch-code-badge">${hotel.hotelId}</span>
+                    <span class="branch-city-badge"><i class="fa-solid fa-location-dot text-indigo"></i> ${hotel.city || ''}</span>
+                    <span class="branch-stars">${starsHtml} <strong style="color:var(--text-primary); margin-left:4px;">${starCount} Sao</strong></span>
+                </div>
+                <h2 class="branch-name"><i class="fa-solid fa-hotel text-indigo"></i> ${hotel.hotelName}</h2>
+                <p class="branch-tagline">“${hotel.tagline || 'Không gian nghỉ dưỡng lý tưởng cho mọi chuyến đi'}”</p>
+                <div class="branch-meta-row">
+                    <div class="meta-item"><i class="fa-solid fa-map-location-dot text-indigo"></i> Địa chỉ: <strong>${hotel.address || 'Đang cập nhật'}</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-phone text-emerald"></i> Hotline: <strong>${hotel.phone || '0236-xxx-xxxx'}</strong></div>
+                    <div class="meta-item"><i class="fa-solid fa-door-open text-purple"></i> Quy mô: <strong>${hotel.totalRooms || 0} phòng</strong></div>
+                    <div class="meta-item-amenities">
+                        ${hotel.hasPool ? '<span class="amenity-badge pool-badge"><i class="fa-solid fa-water-ladder"></i> Hồ bơi</span>' : '<span class="amenity-badge disabled"><i class="fa-solid fa-xmark"></i> Không có bể bơi</span>'}
+                        ${hotel.hasSpa ? '<span class="amenity-badge spa-badge"><i class="fa-solid fa-spa"></i> Spa & Massage</span>' : '<span class="amenity-badge disabled"><i class="fa-solid fa-xmark"></i> Không có Spa</span>'}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 }
