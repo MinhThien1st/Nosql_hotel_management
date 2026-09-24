@@ -43,17 +43,68 @@
             height: 40px;
             border: 1px solid #e2e8f0;
             border-radius: 10px;
-            padding: 0 12px;
-            background: #fff;
-            color: #1e293b;
+            padding: 0 14px;
+            background: #ffffff;
+            color: #0f172a;
             font-family: inherit;
             font-size: 13px;
+            font-weight: 500;
             outline: none;
+            transition: all 0.2s ease;
         }
 
         .booking-control:focus {
             border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, .10);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, .12);
+        }
+
+        select.booking-control {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 13px;
+            padding-right: 34px;
+            cursor: pointer;
+            min-width: 160px;
+        }
+
+        select.booking-control option {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .btn-all-dates {
+            background: #eef2ff;
+            color: #4f46e5;
+            border: 1px solid #c7d2fe;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 13px;
+            height: 40px;
+            font-size: 13px;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .btn-all-dates:hover {
+            background: #e0e7ff;
+            border-color: #a5b4fc;
+            color: #4338ca;
+        }
+
+        .btn-all-dates:active {
+            transform: scale(0.98);
         }
 
         .booking-search {
@@ -522,7 +573,7 @@
                 <div class="custom-dropdown-container" id="hotelDropdownContainer">
                     <button type="button" class="dropdown-trigger-btn" id="hotelDropdownBtn">
                         <i class="fa-solid fa-location-dot text-indigo"></i>
-                        <span id="selectedHotelLabel">Chọn Chi Nhánh</span>
+                        <span id="selectedHotelLabel">Tất Cả Chi Nhánh</span>
                         <i class="fa-solid fa-chevron-down chevron-icon"></i>
                     </button>
 
@@ -540,6 +591,9 @@
             </div>
         </header>
 
+        <!-- Hotel Information Banner (Bảng 'hotels' - Q1) -->
+        <div id="hotelInfoBanner" class="hotel-info-banner"></div>
+
         <section class="tab-pane active" style="display:block;">
 
             <!-- Toolbar -->
@@ -551,8 +605,19 @@
                             type="date"
                             id="bookingDateFilter"
                             class="booking-control"
+                            title="Lọc theo ngày check-in cụ thể"
                         >
                     </div>
+
+                    <button
+                        type="button"
+                        id="btnAllBookings"
+                        class="btn-all-dates"
+                        title="Xem toàn bộ booking của khách sạn (tất cả các ngày)"
+                    >
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Tất cả ngày</span>
+                    </button>
 
                     <select id="bookingStatusFilter" class="booking-control">
                         <option value="ALL">Tất cả trạng thái</option>

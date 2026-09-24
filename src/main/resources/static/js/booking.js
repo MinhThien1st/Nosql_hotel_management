@@ -32,67 +32,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function initBookingPage() {
 
-    // ----------------------------------------------------------
-    // Ngày mặc định = hôm nay
-    // ----------------------------------------------------------
-
-    const dateFilter = document.getElementById("bookingDateFilter");
-
-    if (dateFilter) {
-        dateFilter.value = getTodayString();
-    }
-
-
-    // ----------------------------------------------------------
     // Khởi tạo dropdown khách sạn dùng common.js
-    // ----------------------------------------------------------
-
     initCustomDropdown(function (hotelId) {
-
-        if (!hotelId) {
-
-            allBookings = [];
-
-            renderEmptyBooking(
-                "Vui lòng chọn một chi nhánh khách sạn."
-            );
-
-            updateSummary();
-
-            return;
-        }
-
         loadBookings();
-
     });
 
-
-    // ----------------------------------------------------------
     // Gắn sự kiện
-    // ----------------------------------------------------------
-
     bindEvents();
 
-
-    // ----------------------------------------------------------
     // Load danh sách khách sạn
-    // ----------------------------------------------------------
-
     await loadHotels(function () {
-
-        if (
-            !appState.selectedHotelId &&
-            appState.hotels.length > 0
-        ) {
-
-            const firstHotelId =
-                appState.hotels[0].hotelId;
-
-            selectHotel(firstHotelId);
-        }
-
+        loadBookings();
     });
-
 }
 
 
@@ -144,18 +95,26 @@ function bindEvents() {
 
 
     // ----------------------------------------------------------
-    // Filter ngày
+    // Filter ngày & Tất cả ngày
     // ----------------------------------------------------------
 
     if (dateFilter) {
-
         dateFilter.addEventListener(
             "change",
             function () {
                 loadBookings();
             }
         );
+    }
 
+    const btnAllBookings = document.getElementById("btnAllBookings");
+    if (btnAllBookings) {
+        btnAllBookings.addEventListener("click", function () {
+            if (dateFilter) {
+                dateFilter.value = "";
+            }
+            loadBookings();
+        });
     }
 
 
@@ -375,124 +334,67 @@ async function loadBookings() {
     const dateElement =
         document.getElementById("bookingDateFilter");
 
-    if (!dateElement) {
-        return;
-    }
-
     const date =
-        dateElement.value;
-
-
-    // ----------------------------------------------------------
-    // Chưa chọn khách sạn
-    // ----------------------------------------------------------
-
-    if (!hotelId) {
-
-        allBookings = [];
-
-        renderEmptyBooking(
-            "Vui lòng chọn một chi nhánh khách sạn."
-        );
-
-        updateSummary();
-
-        return;
-    }
-
-
-    // ----------------------------------------------------------
-    // Chưa chọn ngày
-    // ----------------------------------------------------------
-
-    if (!date) {
-
-        allBookings = [];
-
-        renderEmptyBooking(
-            "Vui lòng chọn ngày check-in."
-        );
-
-        updateSummary();
-
-        return;
-    }
-
+        dateElement ? dateElement.value : "";
 
     showBookingLoading();
 
-
     try {
-
-        const url =
-            API_BASE
-            + "/bookings"
-            + "?hotelId="
-            + encodeURIComponent(hotelId)
-            + "&date="
-            + encodeURIComponent(date);
-
-
-        const response =
-            await fetch(url);
-
-
-        if (!response.ok) {
-
-            const errorData =
-                await readResponseJson(response);
-
-            throw new Error(
-                errorData.error
-                || "Không thể tải booking."
-            );
-
+        let url = API_BASE + "/bookings";
+        const params = [];
+        if (hotelId) {
+            params.push("hotelId=" + encodeURIComponent(hotelId));
+        }
+        if (date) {
+            params.push("date=" + encodeURIComponent(date));
+        }
+        if (params.length > 0) {
+            url += "?" + params.join("&");
         }
 
+        const response = await fetch(url);
 
-        const data =
-            await response.json();
+        if (!response.ok) {
+            const errorData = await readResponseJson(response);
+            throw new Error(errorData.error || "Không thể tải booking.");
+        }
 
-
-        allBookings =
-            Array.isArray(data)
-                ? data
-                : [];
-
+        const data = await response.json();
+        allBookings = Array.isArray(data) ? data : [];
 
         updateSummary();
-
         filterBookings();
-
         updateTableSubtitle();
 
-
     } catch (error) {
-
-        console.error(
-            "Lỗi load booking:",
-            error
-        );
-
-
+        console.error("Lỗi load booking:", error);
         allBookings = [];
-
         updateSummary();
+        renderEmptyBooking("Không thể tải danh sách booking.");
+        showToast(error.message || "Lỗi kết nối máy chủ.", "error");
+    }
+}
 
+function updateTableSubtitle() {
+    const subtitle = document.getElementById("bookingTableSubtitle");
+    if (!subtitle) return;
 
-        renderEmptyBooking(
-            "Không thể tải danh sách booking."
-        );
-
-
-        showToast(
-            error.message
-            || "Lỗi kết nối máy chủ.",
-            "error"
-        );
-
+    let hotelName = "Tất Cả Chi Nhánh";
+    if (appState.selectedHotelId) {
+        const found = appState.hotels.find(h => h.hotelId === appState.selectedHotelId);
+        if (found) {
+            hotelName = found.hotelName || found.name;
+        }
     }
 
+    const dateElement = document.getElementById("bookingDateFilter");
+    const date = dateElement ? dateElement.value : "";
+
+    if (date) {
+        subtitle.textContent = `${hotelName} - Ngày ${formatDateVi(date)} - ${allBookings.length} booking`;
+    } else {
+        subtitle.textContent = `${hotelName} - Tất cả các ngày - ${allBookings.length} booking`;
+    }
 }
 
 
@@ -647,23 +549,20 @@ function renderBookingTable(bookings) {
 
 
                     <td>
-
-                        <strong>
-
-                            P.${escapeHtml(
-                                booking.roomNumber || "-"
-                            )}
-
-                        </strong>
-
-                        <div class="muted-line">
-
-                            ${escapeHtml(
-                                booking.roomType || ""
-                            )}
-
+                        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                            <strong>
+                                P.${escapeHtml(booking.roomNumber || "-")}
+                            </strong>
+                            ${!appState.selectedHotelId && booking.hotelId ? `
+                                <span style="font-size:11px; background:#eff6ff; color:#2563eb; padding:1px 7px; border-radius:5px; font-weight:700; border:1px solid #dbeafe;">
+                                    <i class="fa-solid fa-hotel" style="font-size:10px;"></i>
+                                    ${escapeHtml(((appState.hotels || []).find(x => x.hotelId === booking.hotelId) || {}).city || booking.hotelId)}
+                                </span>
+                            ` : ''}
                         </div>
-
+                        <div class="muted-line">
+                            ${escapeHtml(booking.roomType || "")}
+                        </div>
                     </td>
 
 

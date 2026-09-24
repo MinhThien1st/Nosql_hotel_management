@@ -21,9 +21,9 @@ Dự án **Sương Mai Hotel PMS** là ứng dụng Web quản lý chuỗi chi n
 
 | Thành viên | Trọng trách phân chia | Bảng Cassandra phụ trách | Trạng thái thực hiện |
 | :--- | :--- | :--- | :--- |
-| **Dev 1 (Trưởng nhóm)** | **Core Architecture, Quản lý Khách Sạn, Phòng & Dashboard Analytics** | `hotels` (Q1)<br>`rooms_by_hotel` (Q2) | **✅ ĐÃ HOÀN THÀNH 100%** |
-| **Dev 2** | **Module Quản lý Đặt Phòng & Check-in / Check-out (Bookings)** | `bookings_by_hotel_date` (Q4)<br>`bookings_by_guest` (Q3) | **⏳ Đang phát triển / Cần hoàn thiện** |
-| **Dev 3** | **Module Hóa Đơn & Thu Ngân Thanh Toán (Invoices)** | `invoices_by_booking` (Q5) | **⏳ Đang phát triển / Cần hoàn thiện** |
+| **Dev 1 (Trưởng nhóm)** | **Core Architecture, Quản lý Khách Sạn, Sơ Đồ Phòng Theo Ngày & Dashboard Analytics** | `hotels` (Q1)<br>`rooms_by_hotel` (Q2) | **✅ ĐÃ HOÀN THÀNH 100%** |
+| **Dev 2** | **Module Quản lý Đặt Phòng & Check-in / Check-out (Bookings)** | `bookings_by_hotel_date` (Q4)<br>`bookings_by_guest` (Q3) | **✅ ĐÃ HOÀN THÀNH 100%** |
+| **Dev 3** | **Module Hóa Đơn & Thu Ngân Thanh Toán (Invoices)** | `invoices_by_booking` (Q5) | **✅ ĐÃ HOÀN THÀNH 100%** |
 
 ---
 
@@ -33,48 +33,51 @@ Dự án **Sương Mai Hotel PMS** là ứng dụng Web quản lý chuỗi chi n
   - Tự động nhận diện đường dẫn Bundle, cơ chế nạp Keyspace chuẩn và Fallback Mock dữ liệu khi cần.
 - [x] **Quản lý Khách Sạn (`HotelController` - Bảng `hotels`)**:
   - API `GET /api/hotels`: Lấy danh sách toàn bộ chuỗi khách sạn.
-  - API `GET /api/hotels/{hotelId}`: Lấy chi tiết chi nhánh khách sạn.
-- [x] **Quản lý Sơ Đồ Phòng (`RoomController` - Bảng `rooms_by_hotel`)**:
+  - API `GET /api/hotels/{hotelId}`: Lấy chi tiết chi nhánh khách sạn (hiển thị đầy đủ sao, SĐT, hồ bơi, spa, địa chỉ).
+- [x] **Quản lý Sơ Đồ Phòng Theo Ngày (`RoomController` - Bảng `rooms_by_hotel`)**:
   - API `GET /api/rooms`: Lấy danh sách phòng (hỗ trợ lọc theo `hotelId` và `status`).
-  - API `POST /api/rooms`: Thêm phòng mới vào khách sạn.
+  - API `POST /api/rooms`: Thêm phòng mới vào khách sạn (hỗ trợ đầy đủ 9 cột schema NoSQL).
+  - API `PUT /api/rooms/{hotelId}/{roomNumber}`: Chỉnh sửa toàn diện thông tin phòng (loại phòng, tầng, giá tiền, tiện ích, mô tả).
   - API `PUT /api/rooms/{hotelId}/{roomNumber}/status`: Cập nhật nhanh trạng thái phòng (Trống / Đang ở / Đã đặt / Bảo trì).
   - API `DELETE /api/rooms/{hotelId}/{roomNumber}`: Xóa phòng khỏi hệ thống.
+  - **Sơ đồ phòng PMS theo Ngày**: Tự động so khớp ngày chọn (`selectedDate`) với danh sách đặt phòng (`bookings_by_hotel_date`) để tính toán trạng thái phòng theo thời gian thực và hiển thị thẻ tên khách đang lưu trú/đặt phòng.
+  - **Modal Chi tiết phòng**: Hiển thị đầy đủ thông số phòng và thông tin đặt phòng chi tiết trong ngày được chọn.
 - [x] **Dashboard Analytics (`DashboardController`, `DashboardStatsDTO`)**:
   - API `GET /api/dashboard/stats`: Tổng hợp doanh thu, tỷ lệ phòng trống, tỷ lệ lấp đầy, số lượng khách đang lưu trú và dữ liệu biểu đồ.
-- [x] **Giao diện Frontend SPA (`index.html`, `style.css`, `app.js`)**:
+- [x] **Giao diện Frontend SPA (`index.html`, `rooms.html`, `style.css`, `rooms.js`, `dashboard.js`)**:
   - Bố cục Sidebar Navigation tiêu chuẩn, thanh Header chọn chi nhánh bằng Custom Floating Dropdown.
-  - PMS Room Grid trực quan, Bộ lọc chip màu trạng thái, Modal thêm/sửa phòng, Biểu đồ thống kê Chart.js.
+  - PMS Room Grid trực quan, Bộ lọc chip màu trạng thái, Bộ chọn ngày PMS, Modal thêm/sửa phòng, Modal chi tiết phòng, Biểu đồ thống kê Chart.js.
 
 ---
 
-### 📝 Chi Tiết Hướng Dẫn Dành Cho Dev 2 (Module Đặt Phòng - Bookings):
-* **Bảng Cassandra phụ trách**:
+### 📝 Chi Tiết Phần Dev 2 (Module Đặt Phòng - Bookings):
+- [x] **Bảng Cassandra phụ trách**:
   - `bookings_by_hotel_date`: Partition Key `((hotel_id), check_in_date, booking_id)` -> Phục vụ lễ tân quản lý danh sách check-in theo ngày tại từng khách sạn.
   - `bookings_by_guest`: Partition Key `((guest_id), check_in_date, booking_id)` -> Phục vụ tra cứu lịch sử đặt phòng của khách hàng theo CCCD/Guest ID.
-* **Nguyên tắc NoSQL cần thực hiện (Dual-Write Pattern)**:
-  - Khi khách đặt phòng mới, Dev 2 cần viết logic `POST /api/bookings` thực hiện ghi đồng thời vào **cả 2 bảng** trên để đảm bảo tính nhất quán dữ liệu truy vấn.
-  - Khi Check-in: Cập nhật `status = 'CHECKED_IN'` và gọi cập nhật bảng `rooms_by_hotel` sang `OCCUPIED`.
+- [x] **Nguyên tắc NoSQL Dual-Write Pattern**:
+  - Khi khách đặt phòng mới, logic `POST /api/bookings` thực hiện ghi đồng thời vào **cả 2 bảng** trên để đảm bảo tính nhất quán dữ liệu truy vấn.
+  - Khi Check-in: Cập nhật `status = 'CHECKED_IN'` và đồng bộ trạng thái phòng.
   - Khi Check-out: Cập nhật `status = 'COMPLETED'` và đưa phòng về `AVAILABLE`.
-* **Các API Dev 2 cần xây dựng**:
-  - `GET /api/bookings?hotelId=...&date=...`: Lấy danh sách đặt phòng theo khách sạn và ngày.
+- [x] **Các API Đặt phòng**:
+  - `GET /api/bookings`: Lấy danh sách đặt phòng theo khách sạn.
   - `POST /api/bookings`: Tạo đơn đặt phòng mới.
   - `PUT /api/bookings/{bookingId}/status`: Cập nhật trạng thái Check-in / Check-out / Hủy.
-* **Frontend Dev 2 cần làm**: Thiết kế form tạo đặt phòng và bảng danh sách booking trong tab `Đặt Phòng`.
+- [x] **Frontend Đặt phòng (`bookings.html`, `booking.js`)**: Giao diện tạo đặt phòng, quản lý danh sách booking và thao tác nhận/trả phòng.
 
 ---
 
-### 📝 Chi Tiết Hướng Dẫn Dành Cho Dev 3 (Module Hóa Đơn & Thu Ngân - Invoices):
-* **Bảng Cassandra phụ trách**:
+### 📝 Chi Tiết Phần Dev 3 (Module Hóa Đơn & Thu Ngân - Invoices):
+- [x] **Bảng Cassandra phụ trách**:
   - `invoices_by_booking`: Partition Key `((booking_id))` -> Mỗi mã đặt phòng chỉ gắn liền với 1 hóa đơn thanh toán duy nhất.
-* **Nguyên tắc NoSQL cần thực hiện**:
+- [x] **Nguyên tắc NoSQL**:
   - Tra cứu trực tiếp theo `booking_id` để lấy toàn bộ thông tin chi phí lưu trú, tiền phòng, giảm giá và tổng tiền thanh toán.
   - Khi thanh toán thành công, cập nhật `payment_status = 'PAID'` cùng phương thức thanh toán `payment_method` (`CASH`, `CREDIT_CARD`, `MOMO`, `VNPAY`).
-* **Các API Dev 3 cần xây dựng**:
+- [x] **Các API Hóa đơn**:
   - `GET /api/invoices`: Lấy danh sách hóa đơn.
   - `GET /api/invoices/{bookingId}`: Tra cứu hóa đơn chi tiết theo mã booking.
   - `POST /api/invoices`: Xuất hóa đơn cho booking.
   - `PUT /api/invoices/{bookingId}/pay`: Xác nhận thanh toán hóa đơn.
-* **Frontend Dev 3 cần làm**: Thiết kế giao diện chi tiết hóa đơn thanh toán trong tab `Hóa Đơn`.
+- [x] **Frontend Hóa đơn (`invoices.html`, `invoice.js`)**: Giao diện danh sách hóa đơn, in hóa đơn và xác nhận thanh toán.
 
 ---
 
@@ -165,29 +168,33 @@ Nhom9_UngDung_QLKS/
         ├── java/com/qlks/
         │   ├── QlksApplication.java      # Main Entry Point của ứng dụng Spring Boot
         │   ├── config/
-        │   │   └── CassandraConfig.java  # Cấu hình CqlSession kết nối Astra DB (Dev 1 - Hoàn thành)
+        │   │   └── CassandraConfig.java  # Cấu hình CqlSession kết nối Astra DB
         │   ├── model/
-        │   │   ├── Hotel.java            # Model Khách Sạn (Dev 1 - Hoàn thành)
-        │   │   └── Room.java             # Model Phòng Khách Sạn (Dev 1 - Hoàn thành)
+        │   │   ├── Hotel.java            # Model Khách Sạn (Bảng Q1)
+        │   │   ├── Room.java             # Model Phòng Khách Sạn (Bảng Q2)
+        │   │   ├── Booking.java          # Model Đặt Phòng (Bảng Q3, Q4)
+        │   │   └── Invoice.java          # Model Hóa Đơn (Bảng Q5)
         │   ├── dto/
-        │   │   └── DashboardStatsDTO.java# DTO Thống Kê & Phân Tích Dashboard (Dev 1 - Hoàn thành)
+        │   │   └── DashboardStatsDTO.java# DTO Thống Kê & Phân Tích Dashboard
         │   └── controller/
-        │       ├── HotelController.java     # API Quản lý Khách Sạn (Dev 1 - Hoàn thành)
-        │       ├── RoomController.java      # API Quản lý Sơ Đồ Phòng (Dev 1 - Hoàn thành)
-        │       └── DashboardController.java # API Phân Tích KPI Dashboard (Dev 1 - Hoàn thành)
+        │       ├── HotelController.java     # API Quản lý Khách Sạn
+        │       ├── RoomController.java      # API Quản lý Sơ Đồ Phòng Theo Ngày & CRUD
+        │       ├── BookingController.java   # API Đặt Phòng & Check-in / Check-out
+        │       ├── InvoiceController.java   # API Hóa Đơn & Thanh Toán
+        │       └── DashboardController.java # API Phân Tích KPI Dashboard
         └── resources/
             ├── application.properties    # Cấu hình Bundle, Token, Keyspace và Port 8080
             └── static/
                 ├── css/
-                │   └── style.css         # CSS giao diện Light SaaS PMS hiện đại (Dùng chung)
+                │   └── style.css         # CSS giao diện Light SaaS PMS hiện đại
                 ├── js/
                 │   ├── common.js         # Dropdown chọn khách sạn, Toast & Hàm tiện ích chung
-                │   ├── dashboard.js      # Logic Dashboard KPI & Biểu đồ Chart.js (Dev 1 - Hoàn thành)
-                │   ├── rooms.js          # Logic Sơ Đồ Phòng, Filter & CRUD (Dev 1 - Hoàn thành)
-                │   ├── booking.js        # Skeleton JS Đặt phòng (Dành cho Dev 2)
-                │   └── invoice.js        # Skeleton JS Hóa đơn & Thanh toán (Dành cho Dev 3)
-                ├── index.html            # Trang Dashboard Tổng Quan (Dev 1 - Hoàn thành)
-                ├── rooms.html            # Trang Sơ Đồ Phòng Khách Sạn (Dev 1 - Hoàn thành)
-                ├── bookings.html         # Trang Đặt Phòng (Dành cho Dev 2)
-                └── invoices.html         # Trang Hóa Đơn & Thu Ngân (Dành cho Dev 3)
+                │   ├── dashboard.js      # Logic Dashboard KPI & Biểu đồ Chart.js
+                │   ├── rooms.js          # Logic Sơ Đồ Phòng Theo Ngày, Filter, Modals CRUD & Chi tiết
+                │   ├── booking.js        # Logic Đặt phòng, Check-in / Check-out
+                │   └── invoice.js        # Logic Hóa đơn & Thanh toán
+                ├── index.html            # Trang Dashboard Tổng Quan
+                ├── rooms.html            # Trang Sơ Đồ Phòng Khách Sạn (Date-based PMS Grid)
+                ├── bookings.html         # Trang Quản Lý Đặt Phòng
+                └── invoices.html         # Trang Quản Lý Hóa Đơn & Thu Ngân
 ```

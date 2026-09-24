@@ -15,8 +15,8 @@ public class QlksApplication {
     public static void main(String[] args) {
         SpringApplication.run(QlksApplication.class, args);
         System.out.println("==========================================================");
-        System.out.println("🚀 ỨNG DỤNG QUẢN LÝ KHÁCH SẠN (QLKS - CASSANDRA) ĐÃ KHỞI CHẠY");
-        System.out.println("🌐 Truy cập giao diện tại: http://localhost:8080");
+        System.out.println("UNG DUNG QUAN LY KHACH SAN (QLKS - CASSANDRA) DA KHOI CHAY");
+        System.out.println("Truy cap giao dien tai: http://localhost:8080");
         System.out.println("==========================================================");
     }
 }

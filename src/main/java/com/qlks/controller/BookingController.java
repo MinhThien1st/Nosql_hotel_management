@@ -48,6 +48,8 @@ public class BookingController {
     // ============================================================
 
     private PreparedStatement selectBookingsByHotelDateStmt;
+    private PreparedStatement selectBookingsByHotelStmt;
+    private PreparedStatement selectAllBookingsStmt;
     private PreparedStatement selectBookingsByGuestStmt;
     private PreparedStatement selectBookingByIdStmt;
     private PreparedStatement selectRoomByIdStmt;
@@ -128,8 +130,521 @@ public class BookingController {
                         .numberOfNights(2)
                         .numberOfGuests(2)
                         .status("CONFIRMED")
-                        .specialRequest("Ky niem ngay cuoi")
+                        .specialRequest("Ky niem ngay cuoi, set up hoa tuoi")
                         .totalAmountVnd(5600000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B004")
+                        .guestId("G003")
+                        .guestName("Le Hoang Nam")
+                        .hotelId("H002")
+                        .hotelName("Suong Mai Luxury Resort Nha Trang")
+                        .roomNumber("101")
+                        .roomType("Beachfront Villa")
+                        .checkInDate(LocalDate.of(2026, 10, 10))
+                        .checkOutDate(LocalDate.of(2026, 10, 14))
+                        .numberOfNights(4)
+                        .numberOfGuests(4)
+                        .status("CONFIRMED")
+                        .specialRequest("Dua don san bay Cam Ranh")
+                        .totalAmountVnd(14000000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B005")
+                        .guestId("G004")
+                        .guestName("Pham Thu Ha")
+                        .hotelId("H004")
+                        .hotelName("Suong Mai Pearl Resort Phu Quoc")
+                        .roomNumber("301")
+                        .roomType("Sunset Ocean Pool Villa")
+                        .checkInDate(LocalDate.of(2026, 9, 20))
+                        .checkOutDate(LocalDate.of(2026, 9, 23))
+                        .numberOfNights(3)
+                        .numberOfGuests(4)
+                        .status("COMPLETED")
+                        .specialRequest("Trai cay chao mung")
+                        .totalAmountVnd(12600000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B006")
+                        .guestId("G005")
+                        .guestName("Dang Minh Tri")
+                        .hotelId("H005")
+                        .hotelName("Suong Mai Heritage Hotel Ha Noi")
+                        .roomNumber("101")
+                        .roomType("Old Quarter Deluxe")
+                        .checkInDate(LocalDate.of(2026, 11, 1))
+                        .checkOutDate(LocalDate.of(2026, 11, 3))
+                        .numberOfNights(2)
+                        .numberOfGuests(2)
+                        .status("CONFIRMED")
+                        .specialRequest("Huong dan tour pho co")
+                        .totalAmountVnd(2400000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B007")
+                        .guestId("G006")
+                        .guestName("Vu Thi Mai")
+                        .hotelId("H006")
+                        .hotelName("Suong Mai Riverside Hotel Sai Gon")
+                        .roomNumber("501")
+                        .roomType("Presidential River Suite")
+                        .checkInDate(LocalDate.of(2026, 10, 15))
+                        .checkOutDate(LocalDate.of(2026, 10, 16))
+                        .numberOfNights(1)
+                        .numberOfGuests(2)
+                        .status("CONFIRMED")
+                        .specialRequest("VIP Check-in rieng tai phong")
+                        .totalAmountVnd(5500000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B008")
+                        .guestId("G007")
+                        .guestName("Hoang Quoc Viet")
+                        .hotelId("H003")
+                        .hotelName("Suong Mai Boutique Hotel Da Lat")
+                        .roomNumber("201")
+                        .roomType("Romantic Suite")
+                        .checkInDate(LocalDate.of(2026, 12, 24))
+                        .checkOutDate(LocalDate.of(2026, 12, 26))
+                        .numberOfNights(2)
+                        .numberOfGuests(2)
+                        .status("CONFIRMED")
+                        .specialRequest("Dat tiec toi Giang Sinh")
+                        .totalAmountVnd(3600000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B009")
+                        .guestId("G008")
+                        .guestName("Ngo Bao Chau")
+                        .hotelId("H002")
+                        .hotelName("Suong Mai Luxury Resort Nha Trang")
+                        .roomNumber("102")
+                        .roomType("Premier Garden View")
+                        .checkInDate(LocalDate.of(2026, 9, 1))
+                        .checkOutDate(LocalDate.of(2026, 9, 3))
+                        .numberOfNights(2)
+                        .numberOfGuests(3)
+                        .status("COMPLETED")
+                        .specialRequest("Can them 1 giuong phu tre em")
+                        .totalAmountVnd(3200000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B010")
+                        .guestId("G009")
+                        .guestName("Do My Linh")
+                        .hotelId("H001")
+                        .hotelName("Suong Mai Grand Hotel Da Nang")
+                        .roomNumber("102")
+                        .roomType("Superior City View")
+                        .checkInDate(LocalDate.of(2026, 10, 20))
+                        .checkOutDate(LocalDate.of(2026, 10, 22))
+                        .numberOfNights(2)
+                        .numberOfGuests(2)
+                        .status("CONFIRMED")
+                        .specialRequest("Phong yen tinh, khong hut thuoc")
+                        .totalAmountVnd(2200000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B011")
+                        .guestId("G010")
+                        .guestName("Pham Hoang Long")
+                        .hotelId("H001")
+                        .hotelName("Suong Mai Grand Hotel Da Nang")
+                        .roomNumber("202")
+                        .roomType("Standard Double Room")
+                        .checkInDate(LocalDate.of(2026, 9, 24))
+                        .checkOutDate(LocalDate.of(2026, 9, 26))
+                        .numberOfNights(2)
+                        .numberOfGuests(2)
+                        .status("CHECKED_IN")
+                        .specialRequest("Can phong tang cao thoang mat")
+                        .totalAmountVnd(2400000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B012")
+                        .guestId("G011")
+                        .guestName("Nguyen Thi Thu")
+                        .hotelId("H001")
+                        .hotelName("Suong Mai Grand Hotel Da Nang")
+                        .roomNumber("302")
+                        .roomType("Deluxe Ocean View")
+                        .checkInDate(LocalDate.of(2026, 10, 12))
+                        .checkOutDate(LocalDate.of(2026, 10, 15))
+                        .numberOfNights(3)
+                        .numberOfGuests(2)
+                        .status("CONFIRMED")
+                        .specialRequest("Check-in som neu co phong")
+                        .totalAmountVnd(4800000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B013")
+                        .guestId("G012")
+                        .guestName("Vu Duc Thang")
+                        .hotelId("H001")
+                        .hotelName("Suong Mai Grand Hotel Da Nang")
+                        .roomNumber("401")
+                        .roomType("Premier Panorama Suite")
+                        .checkInDate(LocalDate.of(2026, 9, 22))
+                        .checkOutDate(LocalDate.of(2026, 9, 25))
+                        .numberOfNights(3)
+                        .numberOfGuests(3)
+                        .status("CHECKED_IN")
+                        .specialRequest("Set up ban lam viec")
+                        .totalAmountVnd(9600000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B014")
+                        .guestId("G013")
+                        .guestName("Le Thi Mai")
+                        .hotelId("H002")
+                        .hotelName("Suong Mai Luxury Resort Nha Trang")
+                        .roomNumber("201")
+                        .roomType("Ocean Breeze Bungalow")
+                        .checkInDate(LocalDate.of(2026, 9, 24))
+                        .checkOutDate(LocalDate.of(2026, 9, 27))
+                        .numberOfNights(3)
+                        .numberOfGuests(3)
+                        .status("CHECKED_IN")
+                        .specialRequest("Bungalow gan bien")
+                        .totalAmountVnd(6600000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B015")
+                        .guestId("G014")
+                        .guestName("Bui Minh Tuan")
+                        .hotelId("H002")
+                        .hotelName("Suong Mai Luxury Resort Nha Trang")
+                        .roomNumber("202")
+                        .roomType("Deluxe Family Suite")
+                        .checkInDate(LocalDate.of(2026, 10, 18))
+                        .checkOutDate(LocalDate.of(2026, 10, 21))
+                        .numberOfNights(3)
+                        .numberOfGuests(4)
+                        .status("CONFIRMED")
+                        .specialRequest("Gia dinh 2 nguoi lon 2 tre em")
+                        .totalAmountVnd(8700000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B016")
+                        .guestId("G015")
+                        .guestName("Dinh Xuan Phuc")
+                        .hotelId("H002")
+                        .hotelName("Suong Mai Luxury Resort Nha Trang")
+                        .roomNumber("301")
+                        .roomType("Grand Ocean Penthouse")
+                        .checkInDate(LocalDate.of(2026, 11, 5))
+                        .checkOutDate(LocalDate.of(2026, 11, 8))
+                        .numberOfNights(3)
+                        .numberOfGuests(5)
+                        .status("CONFIRMED")
+                        .specialRequest("Dich vu dua don VIP")
+                        .totalAmountVnd(14400000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B017")
+                        .guestId("G016")
+                        .guestName("Hoang Thi Lan")
+                        .hotelId("H003")
+                        .hotelName("Suong Mai Boutique Hotel Da Lat")
+                        .roomNumber("102")
+                        .roomType("Vintage Garden Room")
+                        .checkInDate(LocalDate.of(2026, 9, 24))
+                        .checkOutDate(LocalDate.of(2026, 9, 26))
+                        .numberOfNights(2)
+                        .numberOfGuests(2)
+                        .status("CHECKED_IN")
+                        .specialRequest("Phong ngam vuon hoa")
+                        .totalAmountVnd(1700000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B018")
+                        .guestId("G017")
+                        .guestName("Cao Van Manh")
+                        .hotelId("H003")
+                        .hotelName("Suong Mai Boutique Hotel Da Lat")
+                        .roomNumber("202")
+                        .roomType("Honeymoon Wooden Chalet")
+                        .checkInDate(LocalDate.of(2026, 10, 2))
+                        .checkOutDate(LocalDate.of(2026, 10, 5))
+                        .numberOfNights(3)
+                        .numberOfGuests(2)
+                        .status("CONFIRMED")
+                        .specialRequest("Set up ruou vang va nen")
+                        .totalAmountVnd(6300000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B019")
+                        .guestId("G018")
+                        .guestName("Nguyen Kim Ngan")
+                        .hotelId("H004")
+                        .hotelName("Suong Mai Pearl Resort Phu Quoc")
+                        .roomNumber("101")
+                        .roomType("Tropical Garden Villa")
+                        .checkInDate(LocalDate.of(2026, 9, 24))
+                        .checkOutDate(LocalDate.of(2026, 9, 28))
+                        .numberOfNights(4)
+                        .numberOfGuests(3)
+                        .status("CHECKED_IN")
+                        .specialRequest("Xe don tai san bay Phu Quoc")
+                        .totalAmountVnd(10400000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B020")
+                        .guestId("G019")
+                        .guestName("Tran Dinh Trong")
+                        .hotelId("H004")
+                        .hotelName("Suong Mai Pearl Resort Phu Quoc")
+                        .roomNumber("102")
+                        .roomType("Sunset Beachfront Bungalow")
+                        .checkInDate(LocalDate.of(2026, 10, 8))
+                        .checkOutDate(LocalDate.of(2026, 10, 11))
+                        .numberOfNights(3)
+                        .numberOfGuests(2)
+                        .status("CONFIRMED")
+                        .specialRequest("Phong ngam hoang hon dep")
+                        .totalAmountVnd(11400000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B021")
+                        .guestId("G020")
+                        .guestName("Luu Quang Vu")
+                        .hotelId("H005")
+                        .hotelName("Suong Mai Heritage Hotel Ha Noi")
+                        .roomNumber("201")
+                        .roomType("Opera Balcony Suite")
+                        .checkInDate(LocalDate.of(2026, 9, 24))
+                        .checkOutDate(LocalDate.of(2026, 9, 27))
+                        .numberOfNights(3)
+                        .numberOfGuests(2)
+                        .status("CHECKED_IN")
+                        .specialRequest("Phong huong Nha hat Lon")
+                        .totalAmountVnd(6900000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B022")
+                        .guestId("G021")
+                        .guestName("Phan Thi Thanh")
+                        .hotelId("H005")
+                        .hotelName("Suong Mai Heritage Hotel Ha Noi")
+                        .roomNumber("301")
+                        .roomType("Royal Heritage Suite")
+                        .checkInDate(LocalDate.of(2026, 10, 15))
+                        .checkOutDate(LocalDate.of(2026, 10, 17))
+                        .numberOfNights(2)
+                        .numberOfGuests(4)
+                        .status("CONFIRMED")
+                        .specialRequest("Tour tham quan pho co")
+                        .totalAmountVnd(6200000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B023")
+                        .guestId("G022")
+                        .guestName("Nguyen Duc Cuong")
+                        .hotelId("H006")
+                        .hotelName("Suong Mai Riverside Hotel Sai Gon")
+                        .roomNumber("201")
+                        .roomType("Executive Business Suite")
+                        .checkInDate(LocalDate.of(2026, 9, 24))
+                        .checkOutDate(LocalDate.of(2026, 9, 26))
+                        .numberOfNights(2)
+                        .numberOfGuests(2)
+                        .status("CHECKED_IN")
+                        .specialRequest("Xuat hoa don cong ty")
+                        .totalAmountVnd(5200000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B024")
+                        .guestId("G023")
+                        .guestName("Le Thi Cam Tu")
+                        .hotelId("H006")
+                        .hotelName("Suong Mai Riverside Hotel Sai Gon")
+                        .roomNumber("101")
+                        .roomType("Riverside Deluxe")
+                        .checkInDate(LocalDate.of(2026, 10, 22))
+                        .checkOutDate(LocalDate.of(2026, 10, 25))
+                        .numberOfNights(3)
+                        .numberOfGuests(2)
+                        .status("CONFIRMED")
+                        .specialRequest("Phong huong song Sai Gon")
+                        .totalAmountVnd(5100000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B025")
+                        .guestId("G024")
+                        .guestName("Trinh Hoang Nam")
+                        .hotelId("H007")
+                        .hotelName("Suong Mai Mountain Retreat Sa Pa")
+                        .roomNumber("101")
+                        .roomType("Mountain View Deluxe")
+                        .checkInDate(LocalDate.of(2026, 9, 24))
+                        .checkOutDate(LocalDate.of(2026, 9, 27))
+                        .numberOfNights(3)
+                        .numberOfGuests(2)
+                        .status("CHECKED_IN")
+                        .specialRequest("Phong huong dinh Fansipan")
+                        .totalAmountVnd(4050000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B026")
+                        .guestId("G025")
+                        .guestName("Doan Van Hau")
+                        .hotelId("H007")
+                        .hotelName("Suong Mai Mountain Retreat Sa Pa")
+                        .roomNumber("201")
+                        .roomType("Cloud Hunter Suite")
+                        .checkInDate(LocalDate.of(2026, 10, 4))
+                        .checkOutDate(LocalDate.of(2026, 10, 7))
+                        .numberOfNights(3)
+                        .numberOfGuests(3)
+                        .status("CONFIRMED")
+                        .specialRequest("San may sang som")
+                        .totalAmountVnd(6600000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B027")
+                        .guestId("G010")
+                        .guestName("Pham Hoang Long")
+                        .hotelId("H008")
+                        .hotelName("Suong Mai Bay Resort Quy Nhon")
+                        .roomNumber("101")
+                        .roomType("Ky Co Coastal Deluxe")
+                        .checkInDate(LocalDate.of(2026, 10, 12))
+                        .checkOutDate(LocalDate.of(2026, 10, 15))
+                        .numberOfNights(3)
+                        .numberOfGuests(2)
+                        .status("CONFIRMED")
+                        .specialRequest("Huong bien Ky Co")
+                        .totalAmountVnd(4350000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B028")
+                        .guestId("G013")
+                        .guestName("Le Thi Mai")
+                        .hotelId("H008")
+                        .hotelName("Suong Mai Bay Resort Quy Nhon")
+                        .roomNumber("201")
+                        .roomType("Oceanfront Suite Villa")
+                        .checkInDate(LocalDate.of(2026, 11, 1))
+                        .checkOutDate(LocalDate.of(2026, 11, 4))
+                        .numberOfNights(3)
+                        .numberOfGuests(4)
+                        .status("CONFIRMED")
+                        .specialRequest("Villa ngam bien Quy Nhon")
+                        .totalAmountVnd(8850000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B029")
+                        .guestId("G014")
+                        .guestName("Bui Minh Tuan")
+                        .hotelId("H009")
+                        .hotelName("Suong Mai Seaside Hotel Vung Tau")
+                        .roomNumber("101")
+                        .roomType("Back Beach Deluxe")
+                        .checkInDate(LocalDate.of(2026, 9, 24))
+                        .checkOutDate(LocalDate.of(2026, 9, 26))
+                        .numberOfNights(2)
+                        .numberOfGuests(2)
+                        .status("CHECKED_IN")
+                        .specialRequest("Phong Bai Sau Vung Tau")
+                        .totalAmountVnd(2300000)
+                        .build()
+        );
+
+        MOCK_BOOKINGS.add(
+                Booking.builder()
+                        .bookingId("B030")
+                        .guestId("G015")
+                        .guestName("Dinh Xuan Phuc")
+                        .hotelId("H010")
+                        .hotelName("Suong Mai Imperial Hotel Hue")
+                        .roomNumber("201")
+                        .roomType("Royal River Suite")
+                        .checkInDate(LocalDate.of(2026, 9, 24))
+                        .checkOutDate(LocalDate.of(2026, 9, 27))
+                        .numberOfNights(3)
+                        .numberOfGuests(3)
+                        .status("CHECKED_IN")
+                        .specialRequest("Suite Hoang Cung ven song Huong")
+                        .totalAmountVnd(7350000)
                         .build()
         );
     }
@@ -169,6 +684,47 @@ public class BookingController {
                     FROM bookings_by_hotel_date
                     WHERE hotel_id = ?
                     AND check_in_date = ?;
+                    """
+            );
+
+            // --------------------------------------------------------
+            // SELECT Q4: booking theo khách sạn (Tất cả ngày)
+            // --------------------------------------------------------
+            this.selectBookingsByHotelStmt = session.prepare(
+                    """
+                    SELECT hotel_id,
+                           check_in_date,
+                           booking_id,
+                           guest_id,
+                           guest_name,
+                           room_number,
+                           room_type,
+                           check_out_date,
+                           status,
+                           special_request,
+                           number_of_guests
+                    FROM bookings_by_hotel_date
+                    WHERE hotel_id = ?;
+                    """
+            );
+
+            // --------------------------------------------------------
+            // SELECT: Tất cả booking trong hệ thống
+            // --------------------------------------------------------
+            this.selectAllBookingsStmt = session.prepare(
+                    """
+                    SELECT hotel_id,
+                           check_in_date,
+                           booking_id,
+                           guest_id,
+                           guest_name,
+                           room_number,
+                           room_type,
+                           check_out_date,
+                           status,
+                           special_request,
+                           number_of_guests
+                    FROM bookings_by_hotel_date;
                     """
             );
 
@@ -350,38 +906,59 @@ public class BookingController {
     }
 
     // ============================================================
-    // GET BOOKING THEO KHÁCH SẠN + NGÀY
+    // GET BOOKING THEO KHÁCH SẠN + NGÀY (HOẶC TẤT CẢ NGÀY)
     // GET /api/bookings?hotelId=H001&date=2026-10-01
+    // GET /api/bookings?hotelId=H001 (Tất cả ngày của khách sạn)
+    // GET /api/bookings (Tất cả booking toàn hệ thống)
     // ============================================================
 
     @GetMapping
-    public ResponseEntity<List<Booking>> getBookingsByHotelDate(
-            @RequestParam("hotelId") String hotelId,
-            @RequestParam("date")
+    public ResponseEntity<List<Booking>> getBookings(
+            @RequestParam(value = "hotelId", required = false) String hotelId,
+            @RequestParam(value = "date", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate date) {
 
-        if (session == null || selectBookingsByHotelDateStmt == null) {
+        if (session == null) {
             List<Booking> result = MOCK_BOOKINGS.stream()
-                    .filter(b -> b.getHotelId().equalsIgnoreCase(hotelId))
-                    .filter(b -> b.getCheckInDate().equals(date))
+                    .filter(b -> hotelId == null || hotelId.trim().isEmpty() || b.getHotelId().equalsIgnoreCase(hotelId))
+                    .filter(b -> date == null || b.getCheckInDate().equals(date))
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(result);
         }
 
         try {
-            ResultSet rs = session.execute(
-                    selectBookingsByHotelDateStmt.bind(
-                            hotelId,
-                            date
-                    )
-            );
+            ResultSet rs;
+            if (hotelId != null && !hotelId.trim().isEmpty() && date != null) {
+                if (selectBookingsByHotelDateStmt != null) {
+                    rs = session.execute(selectBookingsByHotelDateStmt.bind(hotelId, date));
+                } else {
+                    rs = session.execute("SELECT * FROM bookings_by_hotel_date WHERE hotel_id = ? AND check_in_date = ?", hotelId, date);
+                }
+            } else if (hotelId != null && !hotelId.trim().isEmpty()) {
+                if (selectBookingsByHotelStmt != null) {
+                    rs = session.execute(selectBookingsByHotelStmt.bind(hotelId));
+                } else {
+                    rs = session.execute("SELECT * FROM bookings_by_hotel_date WHERE hotel_id = ?", hotelId);
+                }
+            } else {
+                if (selectAllBookingsStmt != null) {
+                    rs = session.execute(selectAllBookingsStmt.bind());
+                } else {
+                    rs = session.execute("SELECT * FROM bookings_by_hotel_date");
+                }
+            }
 
             List<Booking> bookings = new ArrayList<>();
-
             for (Row row : rs) {
                 bookings.add(mapHotelDateRowToBooking(row));
+            }
+
+            if (date != null && hotelId == null) {
+                bookings = bookings.stream()
+                        .filter(b -> b.getCheckInDate().equals(date))
+                        .collect(Collectors.toList());
             }
 
             return ResponseEntity.ok(bookings);
@@ -394,7 +971,12 @@ public class BookingController {
                     e.getMessage()
             );
 
-            return ResponseEntity.internalServerError().build();
+            // Fallback sang Mock Data an toàn
+            List<Booking> fallback = MOCK_BOOKINGS.stream()
+                    .filter(b -> hotelId == null || hotelId.trim().isEmpty() || b.getHotelId().equalsIgnoreCase(hotelId))
+                    .filter(b -> date == null || b.getCheckInDate().equals(date))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(fallback);
         }
     }
 
@@ -535,16 +1117,22 @@ public class BookingController {
 
             if (booking.getTotalAmountVnd() == null) {
                 booking.setTotalAmountVnd(0);
-            }
-
             MOCK_BOOKINGS.add(booking);
+
+            // Đồng bộ trạng thái phòng sang BOOKED
+            RoomController.MOCK_ROOMS.stream()
+                    .filter(r -> r.getHotelId().equalsIgnoreCase(booking.getHotelId()) && r.getRoomNumber().equalsIgnoreCase(booking.getRoomNumber()))
+                    .findFirst()
+                    .ifPresent(r -> r.setStatus("BOOKED"));
 
             return ResponseEntity.ok(
                     Map.of(
                             "message",
                             "Tạo booking thành công (Mock Mode)",
                             "booking",
-                            booking
+                            booking,
+                            "roomStatus",
+                            "BOOKED"
                     )
             );
         }
@@ -747,6 +1335,12 @@ public class BookingController {
 
                 String roomStatus =
                         roomStatusForBookingStatus(newStatus);
+
+                // Đồng bộ trạng thái phòng
+                RoomController.MOCK_ROOMS.stream()
+                        .filter(r -> r.getHotelId().equalsIgnoreCase(booking.getHotelId()) && r.getRoomNumber().equalsIgnoreCase(booking.getRoomNumber()))
+                        .findFirst()
+                        .ifPresent(r -> r.setStatus(roomStatus));
 
                 return ResponseEntity.ok(
                         Map.of(

@@ -39,25 +39,70 @@ public class RoomController {
     private PreparedStatement deleteRoomStmt;
 
     // Bộ nhớ đệm Mock Data an toàn cho demo offline
-    private static final List<Room> MOCK_ROOMS = new ArrayList<>();
+    public static final List<Room> MOCK_ROOMS = new ArrayList<>();
 
     static {
+        // H001 - Da Nang
         MOCK_ROOMS.add(new Room("H001", "101", "Deluxe Ocean View", 1, 1500000, "Ocean", "AVAILABLE", 2, "Phong Deluxe huong bien truc dien, ban cong rong"));
         MOCK_ROOMS.add(new Room("H001", "102", "Superior City View", 1, 1100000, "City", "OCCUPIED", 2, "Phong Superior huong pho ngam Da Nang ve dem"));
         MOCK_ROOMS.add(new Room("H001", "201", "Executive Suite", 2, 2800000, "Ocean", "AVAILABLE", 4, "Suite cao cap co phong khach rieng va be boi jacuzzi"));
         MOCK_ROOMS.add(new Room("H001", "202", "Standard Double Room", 2, 1200000, "City", "BOOKED", 2, "Phong tieu chuan 2 giuong doi day du tien nghi"));
         MOCK_ROOMS.add(new Room("H001", "301", "Presidential Suite", 3, 4500000, "Panoramic Ocean", "MAINTENANCE", 6, "Phong tong thong sang trong nhat"));
-        
+        MOCK_ROOMS.add(new Room("H001", "302", "Deluxe Ocean View", 3, 1600000, "Ocean", "AVAILABLE", 2, "Phong Deluxe tang cao view bien My Khe"));
+        MOCK_ROOMS.add(new Room("H001", "401", "Premier Panorama Suite", 4, 3200000, "Ocean & Mountain", "OCCUPIED", 4, "Suite Panorama 360 do ngam ban dao Son Tra"));
+
+        // H002 - Nha Trang
         MOCK_ROOMS.add(new Room("H002", "101", "Beachfront Villa", 1, 3500000, "Beach", "OCCUPIED", 4, "Villa sat bien co loi di rieng xuong bai cat"));
         MOCK_ROOMS.add(new Room("H002", "102", "Premier Garden View", 1, 1600000, "Garden", "AVAILABLE", 2, "Phong Premier nhin ra khu vuon nhiet doi xanh mat"));
         MOCK_ROOMS.add(new Room("H002", "201", "Ocean Breeze Bungalow", 2, 2200000, "Ocean", "AVAILABLE", 3, "Bungalow thoang mat sat bo bien"));
-        
+        MOCK_ROOMS.add(new Room("H002", "202", "Deluxe Family Suite", 2, 2900000, "Sea View", "BOOKED", 4, "Phong gia dinh tien nghi co ban cong rong rai"));
+        MOCK_ROOMS.add(new Room("H002", "301", "Grand Ocean Penthouse", 3, 4800000, "Panoramic Bay", "AVAILABLE", 6, "Penthouse sang trong nhat vinh Nha Trang"));
+
+        // H003 - Da Lat
         MOCK_ROOMS.add(new Room("H003", "101", "Classic Pine View", 1, 950000, "Garden", "AVAILABLE", 2, "Phong co dien view vuon thong Da Lat"));
+        MOCK_ROOMS.add(new Room("H003", "102", "Vintage Garden Room", 1, 850000, "Flower Garden", "AVAILABLE", 2, "Phong phong cach vintage ngam vuon hoa Da Lat"));
         MOCK_ROOMS.add(new Room("H003", "201", "Romantic Suite", 2, 1800000, "Mountain", "AVAILABLE", 2, "Phong suite lang man co lo suoi am ap"));
-        
+        MOCK_ROOMS.add(new Room("H003", "202", "Honeymoon Wooden Chalet", 2, 2100000, "Valley View", "OCCUPIED", 2, "Nha go phong cach Thuy Si danh cho cap doi"));
+        MOCK_ROOMS.add(new Room("H003", "301", "Cloud Valley Suite", 3, 2400000, "Cloud & Valley", "BOOKED", 3, "Suite tang ap san may buoi sang"));
+
+        // H004 - Phu Quoc
+        MOCK_ROOMS.add(new Room("H004", "101", "Tropical Garden Villa", 1, 2600000, "Garden Pool", "AVAILABLE", 3, "Villa san vuon nhiet doi gan ho boi"));
+        MOCK_ROOMS.add(new Room("H004", "102", "Sunset Beachfront Bungalow", 1, 3800000, "Sunset Beach", "OCCUPIED", 2, "Bungalow sat bai bien ngam hoang hon"));
+        MOCK_ROOMS.add(new Room("H004", "201", "Deluxe Ocean View", 2, 2100000, "Ocean", "AVAILABLE", 2, "Phong Deluxe tien nghi cao cap"));
         MOCK_ROOMS.add(new Room("H004", "301", "Sunset Ocean Pool Villa", 3, 4200000, "Ocean Sunset", "AVAILABLE", 4, "Villa be boi vo cuc ngam hoang hon Phu Quoc"));
+
+        // H005 - Ha Noi
         MOCK_ROOMS.add(new Room("H005", "101", "Old Quarter Deluxe", 1, 1200000, "Street", "AVAILABLE", 2, "Phong Deluxe mang kien truc Phap co pho co Ha Noi"));
+        MOCK_ROOMS.add(new Room("H005", "102", "Heritage Superior", 1, 980000, "Inner Courtyard", "OCCUPIED", 2, "Phong Superior yen tinh co san trong"));
+        MOCK_ROOMS.add(new Room("H005", "201", "Opera Balcony Suite", 2, 2300000, "City Opera", "BOOKED", 2, "Suite ban cong ngam pho co Hoan Kiem"));
+        MOCK_ROOMS.add(new Room("H005", "301", "Royal Heritage Suite", 3, 3100000, "Sword Lake View", "AVAILABLE", 4, "Suite phong cach Hoang Gia co do"));
+
+        // H006 - TP. Ho Chi Minh
+        MOCK_ROOMS.add(new Room("H006", "101", "Riverside Deluxe", 1, 1700000, "River", "AVAILABLE", 2, "Phong Deluxe view song Sai Gon lung linh"));
+        MOCK_ROOMS.add(new Room("H006", "201", "Executive Business Suite", 2, 2600000, "City Skyline", "AVAILABLE", 2, "Suite danh cho doanh nhan trung tam Quan 1"));
+        MOCK_ROOMS.add(new Room("H006", "301", "Grand River View Suite", 3, 3500000, "Saigon River", "MAINTENANCE", 4, "Suite ban cong rong ngam cau Ba Son"));
         MOCK_ROOMS.add(new Room("H006", "501", "Presidential River Suite", 5, 5500000, "River", "OCCUPIED", 4, "Phong Tong thong view toan canh song Sai Gon"));
+
+        // H007 - Sa Pa
+        MOCK_ROOMS.add(new Room("H007", "101", "Mountain View Deluxe", 1, 1350000, "Fansipan Peak", "AVAILABLE", 2, "Phong Deluxe view dinh Fansipan hung vi"));
+        MOCK_ROOMS.add(new Room("H007", "102", "Valley Mist Superior", 1, 1100000, "Muong Hoa Valley", "AVAILABLE", 2, "Phong ngam thung lung Muong Hoa"));
+        MOCK_ROOMS.add(new Room("H007", "201", "Cloud Hunter Suite", 2, 2200000, "Floating Clouds", "OCCUPIED", 3, "Suite san may sang som tai Sa Pa"));
+        MOCK_ROOMS.add(new Room("H007", "301", "Highland Panorama Chalet", 3, 3300000, "360 Mountain", "AVAILABLE", 4, "Chalet bang go cao cap giua nui rung Tay Bac"));
+
+        // H008 - Quy Nhon
+        MOCK_ROOMS.add(new Room("H008", "101", "Ky Co Coastal Deluxe", 1, 1450000, "Ocean Front", "AVAILABLE", 2, "Phong Deluxe sat bien Ky Co hoang so"));
+        MOCK_ROOMS.add(new Room("H008", "102", "Eo Gio Sunset View", 1, 1650000, "Rocky Cliff Sunset", "AVAILABLE", 2, "Phong ngam hoang hon Eo Gio Quy Nhon"));
+        MOCK_ROOMS.add(new Room("H008", "201", "Oceanfront Suite Villa", 2, 2950000, "Panoramic Sea", "BOOKED", 4, "Villa view bien xanh ngoc bich"));
+
+        // H009 - Vung Tau
+        MOCK_ROOMS.add(new Room("H009", "101", "Back Beach Deluxe", 1, 1150000, "Back Beach", "AVAILABLE", 2, "Phong Deluxe sat Bai Sau Vung Tau"));
+        MOCK_ROOMS.add(new Room("H009", "102", "Seaside Superior", 1, 950000, "City Sea", "OCCUPIED", 2, "Phong Superior tieu chuan nghi duong cuoi tuan"));
+        MOCK_ROOMS.add(new Room("H009", "201", "Ocean Breeze Suite", 2, 1950000, "Ocean Front", "AVAILABLE", 4, "Suite gia dinh ngam bien thoang mat"));
+
+        // H010 - Hue
+        MOCK_ROOMS.add(new Room("H010", "101", "Perfume River Deluxe", 1, 1250000, "Huong River", "AVAILABLE", 2, "Phong Deluxe ngam song Huong tho mong"));
+        MOCK_ROOMS.add(new Room("H010", "102", "Imperial Classic Room", 1, 990000, "Ancient Citadel", "AVAILABLE", 2, "Phong mang phong cach co do Hue co kinh"));
+        MOCK_ROOMS.add(new Room("H010", "201", "Royal River Suite", 2, 2450000, "River & Citadel", "OCCUPIED", 3, "Suite Hoang Cung sang trong ben bo song Huong"));
     }
 
     @Autowired
@@ -159,13 +204,25 @@ public class RoomController {
      */
     @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody Room room) {
-        if (room.getHotelId() == null || room.getRoomNumber() == null) {
+        if (room.getHotelId() == null || room.getHotelId().isBlank() || room.getRoomNumber() == null || room.getRoomNumber().isBlank()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Mã khách sạn và Số phòng là bắt buộc!"));
         }
 
-        if (room.getStatus() == null || room.getStatus().isBlank()) {
-            room.setStatus("AVAILABLE");
-        }
+        String roomType = room.getRoomType() != null && !room.getRoomType().isBlank() ? room.getRoomType() : "Standard";
+        int floor = room.getFloor() != null ? room.getFloor() : 1;
+        int price = room.getPriceVnd() != null ? room.getPriceVnd() : 1000000;
+        String roomView = room.getRoomView() != null && !room.getRoomView().isBlank() ? room.getRoomView() : "City";
+        String status = room.getStatus() != null && !room.getStatus().isBlank() ? room.getStatus().toUpperCase() : "AVAILABLE";
+        int capacity = room.getCapacity() != null ? room.getCapacity() : 2;
+        String description = room.getDescription() != null ? room.getDescription() : "";
+
+        room.setRoomType(roomType);
+        room.setFloor(floor);
+        room.setPriceVnd(price);
+        room.setRoomView(roomView);
+        room.setStatus(status);
+        room.setCapacity(capacity);
+        room.setDescription(description);
 
         if (session == null || insertRoomStmt == null) {
             MOCK_ROOMS.removeIf(r -> r.getHotelId().equalsIgnoreCase(room.getHotelId()) && r.getRoomNumber().equalsIgnoreCase(room.getRoomNumber()));
@@ -177,13 +234,13 @@ public class RoomController {
             session.execute(insertRoomStmt.bind(
                     room.getHotelId(),
                     room.getRoomNumber(),
-                    room.getRoomType(),
-                    room.getFloor() != null ? room.getFloor() : 1,
-                    room.getPriceVnd() != null ? room.getPriceVnd() : 1000000,
-                    room.getRoomView(),
-                    room.getStatus(),
-                    room.getCapacity() != null ? room.getCapacity() : 2,
-                    room.getDescription()
+                    roomType,
+                    floor,
+                    price,
+                    roomView,
+                    status,
+                    capacity,
+                    description
             ));
             return ResponseEntity.ok(Map.of("message", "Thêm phòng mới thành công!", "room", room));
         } catch (Exception e) {
@@ -211,10 +268,12 @@ public class RoomController {
             return ResponseEntity.badRequest().body(Map.of("error", "Trạng thái mới không hợp lệ!"));
         }
 
+        newStatus = newStatus.toUpperCase();
+
         if (session == null || updateRoomStatusStmt == null) {
             for (Room r : MOCK_ROOMS) {
                 if (r.getHotelId().equalsIgnoreCase(hotelId) && r.getRoomNumber().equalsIgnoreCase(roomNumber)) {
-                    r.setStatus(newStatus.toUpperCase());
+                    r.setStatus(newStatus);
                     return ResponseEntity.ok(Map.of("message", "Cập nhật trạng thái thành công (Mock Mode)", "room", r));
                 }
             }
@@ -222,8 +281,8 @@ public class RoomController {
         }
 
         try {
-            session.execute(updateRoomStatusStmt.bind(newStatus.toUpperCase(), hotelId, roomNumber));
-            return ResponseEntity.ok(Map.of("message", "Cập nhật trạng thái phòng thành công!", "hotelId", hotelId, "roomNumber", roomNumber, "newStatus", newStatus.toUpperCase()));
+            session.execute(updateRoomStatusStmt.bind(newStatus, hotelId, roomNumber));
+            return ResponseEntity.ok(Map.of("message", "Cập nhật trạng thái phòng thành công!", "hotelId", hotelId, "roomNumber", roomNumber, "newStatus", newStatus));
         } catch (Exception e) {
             log.error("Lỗi khi cập nhật trạng thái phòng {}/{}: {}", hotelId, roomNumber, e.getMessage());
             return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
@@ -240,28 +299,49 @@ public class RoomController {
             @PathVariable("roomNumber") String roomNumber,
             @RequestBody Room updatedRoom) {
 
+        String roomType = updatedRoom.getRoomType() != null && !updatedRoom.getRoomType().isBlank() ? updatedRoom.getRoomType() : "Standard";
+        int floor = updatedRoom.getFloor() != null ? updatedRoom.getFloor() : 1;
+        int price = updatedRoom.getPriceVnd() != null ? updatedRoom.getPriceVnd() : 1000000;
+        String roomView = updatedRoom.getRoomView() != null && !updatedRoom.getRoomView().isBlank() ? updatedRoom.getRoomView() : "City";
+        String status = updatedRoom.getStatus() != null && !updatedRoom.getStatus().isBlank() ? updatedRoom.getStatus().toUpperCase() : "AVAILABLE";
+        int capacity = updatedRoom.getCapacity() != null ? updatedRoom.getCapacity() : 2;
+        String description = updatedRoom.getDescription() != null ? updatedRoom.getDescription() : "";
+
+        updatedRoom.setHotelId(hotelId);
+        updatedRoom.setRoomNumber(roomNumber);
+        updatedRoom.setRoomType(roomType);
+        updatedRoom.setFloor(floor);
+        updatedRoom.setPriceVnd(price);
+        updatedRoom.setRoomView(roomView);
+        updatedRoom.setStatus(status);
+        updatedRoom.setCapacity(capacity);
+        updatedRoom.setDescription(description);
+
         if (session == null || updateRoomDetailsStmt == null) {
+            boolean found = false;
             for (int i = 0; i < MOCK_ROOMS.size(); i++) {
                 Room r = MOCK_ROOMS.get(i);
                 if (r.getHotelId().equalsIgnoreCase(hotelId) && r.getRoomNumber().equalsIgnoreCase(roomNumber)) {
-                    updatedRoom.setHotelId(hotelId);
-                    updatedRoom.setRoomNumber(roomNumber);
                     MOCK_ROOMS.set(i, updatedRoom);
-                    return ResponseEntity.ok(Map.of("message", "Cập nhật phòng thành công (Mock Mode)", "room", updatedRoom));
+                    found = true;
+                    break;
                 }
             }
-            return ResponseEntity.notFound().build();
+            if (!found) {
+                MOCK_ROOMS.add(updatedRoom);
+            }
+            return ResponseEntity.ok(Map.of("message", "Cập nhật phòng thành công (Mock Mode)", "room", updatedRoom));
         }
 
         try {
             session.execute(updateRoomDetailsStmt.bind(
-                    updatedRoom.getRoomType(),
-                    updatedRoom.getFloor(),
-                    updatedRoom.getPriceVnd(),
-                    updatedRoom.getRoomView(),
-                    updatedRoom.getStatus(),
-                    updatedRoom.getCapacity(),
-                    updatedRoom.getDescription(),
+                    roomType,
+                    floor,
+                    price,
+                    roomView,
+                    status,
+                    capacity,
+                    description,
                     hotelId,
                     roomNumber
             ));
